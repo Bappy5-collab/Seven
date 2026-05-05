@@ -1,4 +1,6 @@
 import AlertBanner from "@/components/AlertBanner";
+import DrivingDemand from "@/components/DrivingDemand";
+import FeaturedWork from "@/components/FeaturedWork";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import ServicesGrid from "@/components/ServicesGrid";
@@ -7,6 +9,8 @@ import CaseStudies from "@/components/CaseStudies";
 import AboutSection from "@/components/AboutSection";
 import BlogSection from "@/components/BlogSection";
 import Footer from "@/components/Footer";
+import ServicesSection from "@/components/ServicesGrid";
+import LegacySection from "@/components/LegacySection";
 
 export default function Home() {
   return (
@@ -18,8 +22,11 @@ export default function Home() {
         <HeroSection />
       </div>
       <main>
-        <ServicesGrid />
-        <InternationalSection />
+        <DrivingDemand/>
+        <FeaturedWork />
+        <ServicesSection />
+        <LegacySection/>
+         
         <CaseStudies />
         <AboutSection />
         <BlogSection />

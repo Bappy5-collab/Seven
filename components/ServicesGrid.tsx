@@ -1,146 +1,166 @@
 "use client";
-import { Box, Container, Typography, Grid } from "@mui/material";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
-const services = [
-  {
-    title: "Search & Growth Strategy",
-    desc: "Data-led strategies that build sustainable organic growth and market visibility.",
-    icon: "📊",
-  },
-  {
-    title: "Onsite SEO",
-    desc: "Technical and content optimisation that makes your site the destination for search.",
-    icon: "🔍",
-  },
-  {
-    title: "Content Experience",
-    desc: "Search-first content that creates, captures and converts demand at every stage.",
-    icon: "✍️",
-  },
-  {
-    title: "B2B Marketing",
-    desc: "Connecting complex B2B brands to the right audiences through organic channels.",
-    icon: "🤝",
-  },
+import React, { useState } from "react";
+import { Box, Typography, Button } from "@mui/material";
+
+const servicesLeft = [
   {
     title: "Digital PR",
-    desc: "Authoritative coverage and links from the publications your customers trust.",
-    icon: "📰",
+    image: "/images/service1.jpg",
   },
   {
-    title: "Social Media & Campaigns",
-    desc: "Social strategies that drive awareness, engagement and organic discovery.",
-    icon: "📱",
+    title: "Search & Growth Strategy",
   },
   {
     title: "Data & Insights",
-    desc: "Intelligence that powers smarter decisions across every organic channel.",
-    icon: "📈",
-  },
-  {
-    title: "Social SEO / Search",
-    desc: "Optimising your brand presence wherever your customers are searching next.",
-    icon: "🔎",
   },
 ];
 
-export default function ServicesGrid() {
+const servicesRight = [
+  { title: "Organic Social & Content" },
+  { title: "Content Experience" },
+  { title: "Onsite SEO" },
+];
+
+const ServicesSection = () => {
+  const [hovered, setHovered] = useState<string | null>(null);
+
   return (
-    <Box sx={{ bgcolor: "#ffffff", py: { xs: 8, md: 12 }, borderBottom: "1px solid #e0e0e0" }}>
-      <Container maxWidth="xl" sx={{ px: { xs: 3, md: 6 } }}>
-        {/* Section Header */}
-        <Box
+    <Box sx={{ background: "#f5f5f5", px: { xs: 3, md: 8 }, py: 8 }}>
+      {/* Header */}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          mb: 6,
+        }}
+      >
+        <Typography sx={{ fontSize: "72px", fontWeight: 600 }}>
+          Our Services
+        </Typography>
+
+        <Button
           sx={{
-            display: "flex",
-            flexDirection: { xs: "column", md: "row" },
-            justifyContent: "space-between",
-            alignItems: { xs: "flex-start", md: "flex-end" },
-            mb: 6,
-            gap: 2,
+            borderRadius: "999px",
+            px: 3,
+            py: 1,
+            background: "#fff",
+            color: "#000",
+            textTransform: "none",
           }}
         >
-          <Box>
-            <Typography
-              sx={{
-                fontSize: "0.75rem",
-                fontWeight: 700,
-                letterSpacing: "0.15em",
-                textTransform: "uppercase",
-                color: "#888",
-                mb: 1,
-              }}
-            >
-              What we do
-            </Typography>
-            <Typography
-              variant="h2"
-              sx={{
-                fontSize: { xs: "2rem", md: "3rem" },
-                fontWeight: 900,
-                letterSpacing: "-0.03em",
-                textTransform: "uppercase",
-              }}
-            >
-              Our Services
-            </Typography>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: 1,
-              cursor: "pointer",
-              "&:hover": { opacity: 0.7 },
-              pb: 0.5,
-              borderBottom: "2px solid #000",
-            }}
-          >
-            <Typography sx={{ fontWeight: 700, fontSize: "0.875rem" }}>View all services</Typography>
-            <ArrowForwardIcon sx={{ fontSize: "1rem" }} />
-          </Box>
-        </Box>
+          View All Services ↗
+        </Button>
+      </Box>
 
-        {/* Services Grid */}
-        <Grid container>
-          {services.map((service, index) => (
-            <Grid
-              key={service.title}
-              size={{ xs: 12, sm: 6, md: 3 }}
-              sx={{
-                borderRight: { xs: "none", sm: index % 2 === 0 ? "1px solid #e0e0e0" : "none", md: index % 4 !== 3 ? "1px solid #e0e0e0" : "none" },
-                borderBottom: "1px solid #e0e0e0",
-                p: 4,
-                cursor: "pointer",
-                transition: "background 0.2s",
-                "&:hover": { bgcolor: "#f9f9f9" },
-                "&:hover .arrow": { opacity: 1 },
-              }}
-            >
-              <Typography sx={{ fontSize: "2rem", mb: 2 }}>{service.icon}</Typography>
-              <Typography sx={{ fontWeight: 800, fontSize: "1rem", mb: 1.5, letterSpacing: "-0.01em" }}>
-                {service.title}
-              </Typography>
-              <Typography sx={{ color: "#666", fontSize: "0.875rem", lineHeight: 1.6, mb: 3 }}>
-                {service.desc}
-              </Typography>
+      <Box sx={{ borderBottom: "1px solid #ddd", mb: 4 }} />
+
+      {/* Grid */}
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+          gap: 6,
+        }}
+      >
+        {/* LEFT */}
+        <Box>
+          {servicesLeft.map((item, i) => {
+            const isHover = hovered === item.title;
+
+            return (
               <Box
-                className="arrow"
+                key={i}
+                onMouseEnter={() => setHovered(item.title)}
+                onMouseLeave={() => setHovered(null)}
                 sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 0.5,
-                  opacity: 0,
-                  transition: "opacity 0.2s",
+                  position: "relative",
+                  py: 4,
+                  borderBottom: "1px solid #ddd",
+                  cursor: "pointer",
+                  overflow: "hidden",
                 }}
               >
-                <Typography sx={{ fontSize: "0.8rem", fontWeight: 700 }}>Learn more</Typography>
-                <ArrowForwardIcon sx={{ fontSize: "0.9rem" }} />
+                {/* BACKGROUND IMAGE */}
+                {item.image && (
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      inset: 0,
+                      opacity: isHover ? 1 : 0,
+                      transform: isHover ? "scale(1)" : "scale(1.05)",
+                      transition: "all 0.5s ease",
+                      zIndex: 1,
+                    }}
+                  >
+                    <Box
+                      component="img"
+                      src={item.image}
+                      sx={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                        borderRadius: "80px",
+                      }}
+                    />
+
+                    {/* DARK OVERLAY (for readability) */}
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        inset: 0,
+                        background: "rgba(0,0,0,0.35)",
+                        borderRadius: "80px",
+                      }}
+                    />
+                  </Box>
+                )}
+
+                {/* TEXT */}
+                <Typography
+                  sx={{
+                    position: "relative",
+                    zIndex: 2,
+                    fontSize: { xs: "28px", md: "40px" },
+                    fontWeight: 500,
+                    color: isHover ? "#fff" : "#000",
+                    transition: "all 0.3s ease",
+                    pl: 2,
+                  }}
+                >
+                  {isHover && "7 "}
+                  {item.title}
+                </Typography>
               </Box>
-            </Grid>
+            );
+          })}
+        </Box>
+
+        {/* RIGHT */}
+        <Box>
+          {servicesRight.map((item, i) => (
+            <Box
+              key={i}
+              sx={{
+                py: 4,
+                borderBottom: "1px solid #ddd",
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: { xs: "28px", md: "40px" },
+                  fontWeight: 500,
+                }}
+              >
+                {item.title}
+              </Typography>
+            </Box>
           ))}
-        </Grid>
-      </Container>
+        </Box>
+      </Box>
     </Box>
   );
-}
+};
+
+export default ServicesSection;
