@@ -3,15 +3,15 @@ import { Box, Typography } from "@mui/material";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
-/* px of scroll to fully transition one card */
 const SCROLL_PER_CARD = 500;
 
 const cards = [
     {
         bg: "#111",
-        rotation: -4,
+        rotation: 4,
+        scale: 1,
         textColor: "#fff",
-        subColor: "rgba(255,255,255,0.65)",
+        subColor: "rgba(255,255,255,0.85)",
         img: "/Banner/Screenshot 2026-05-04 173305.png",
         title: "Pioneers",
         body: [
@@ -21,9 +21,10 @@ const cards = [
     },
     {
         bg: "#b8f5e4",
-        rotation: 3,
+        rotation: 6,
+        scale: 1.04,
         textColor: "#111",
-        subColor: "rgba(0,0,0,0.58)",
+        subColor: "rgba(0,0,0,0.65)",
         img: "/Banner/Screenshot 2026-05-04 173321.png",
         title: "Award Winning",
         body: [
@@ -32,25 +33,22 @@ const cards = [
     },
     {
         bg: "#ffffff",
-        rotation: -2,
+        rotation: 8,
+        scale: 1.08,
         textColor: "#111",
         subColor: "rgba(0,0,0,0.58)",
         img: "/Banner/Screenshot 2026-05-04 173347.png",
-        title: "Results Driven",
+        title: "Speed",
         body: [
-            "Our work consistently delivers measurable impact — from organic traffic growth to revenue generation. We build strategies that don't just rank, they convert.",
+            "People ask us why we are called Rise at Seven? Ever heard the saying Early Bird catches the worm? Google is moving fast, but humans are moving faster. We chase consumers, not algorithms. We’ve created a service which takes ideas to result within 60 minutes.",
         ],
     },
 ];
 
 export default function LegacySection() {
     const trackRef = useRef<HTMLDivElement>(null);
-    const stickyRef = useRef<HTMLDivElement>(null);
     const [progress, setProgress] = useState(0);
-    const [tilt, setTilt] = useState({ x: 0, y: 0 });
-    const [isHovered, setIsHovered] = useState(false);
 
-    /* scroll progress: 0 → cards.length */
     useEffect(() => {
         const onScroll = () => {
             const el = trackRef.current;
@@ -63,50 +61,30 @@ export default function LegacySection() {
         return () => window.removeEventListener("scroll", onScroll);
     }, []);
 
-    const activeIdx = Math.min(Math.floor(progress), cards.length - 1);
-
-    const onMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-        const rect = stickyRef.current?.getBoundingClientRect();
-        if (!rect) return;
-        const nx = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2);
-        const ny = (e.clientY - rect.top - rect.height / 2) / (rect.height / 2);
-        setTilt({ x: -ny * 9, y: nx * 9 });
-    };
-
     return (
-        /*
-         * Outer track: tall enough for all card transitions + final hold.
-         * (cards.length + 1) gives one extra SCROLL_PER_CARD to hold the last card.
-         */
         <Box
             ref={trackRef}
             sx={{ height: `calc(${(cards.length + 1) * SCROLL_PER_CARD}px + 100vh)` }}
         >
-            {/* Sticky frame — stays pinned while track scrolls */}
             <Box
-                ref={stickyRef}
-                onMouseMove={onMouseMove}
-                onMouseLeave={() => { setTilt({ x: 0, y: 0 }); setIsHovered(false); }}
-                onMouseEnter={() => setIsHovered(true)}
                 sx={{
                     position: "sticky",
                     top: 0,
                     height: "100vh",
-                    background: "#f0efed",
+                 
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
                     justifyContent: "center",
                     overflow: "hidden",
+                    mt:{xs:6, md:8},
                 }}
             >
-                {/* Section label */}
                 <Typography
                     sx={{
-                        fontSize: { xs: "0.88rem", md: "0.95rem" },
-                        fontWeight: 500,
+                        fontSize: { xs: "0.88rem", md: "1.25rem" },
+                        fontWeight: 700,
                         color: "#111",
-                        mb: { xs: 6, md: 8 },
                         letterSpacing: "0.01em",
                     }}
                 >
@@ -114,108 +92,114 @@ export default function LegacySection() {
                 </Typography>
 
                 {/*
-                 * Card stack.
-                 * Cards are absolutely stacked (inset:0) with different base rotations.
-                 * z-index decreases by card index so card 0 is always on top.
-                 * As a card slides upward its content is revealed card below peeks through.
+                 * Extra padding on container so rotated back-cards don't clip.
+                 * All cards use position:absolute + inset:0 so they share the
+                 * same bounding box and rotate around a common center.
                  */}
                 <Box
                     sx={{
                         position: "relative",
-                        width: { xs: "82vw", sm: "400px", md: "440px" },
-                        height: { xs: "520px", md: "580px" },
-                        perspective: "1200px",
+                        width: { xs: "76vw", sm: "400px", md: "640px" },
+                        height: { xs: "520px", md: "670px" },
+                        /* room for rotated corners of back cards */
+                        p: "40px",
+                        mx: "auto",
+                        mb:{xs:6, mb:8},
                     }}
                 >
-                    {cards.map((card, i) => {
-                        /*
-                         * cardProgress > 0 means this card has started exiting.
-                         * Clamp so it can't go beyond -120% (fully off-screen).
-                         */
-                        const cardProgress = Math.max(0, progress - i);
-                        const exitPct = Math.min(cardProgress * 120, 120);
-                        const isActive = i === activeIdx;
+                    {/* Inner anchor — cards rotate around THIS box's center */}
+                    <Box sx={{ position: "relative", width: "100%", height: "100%" }}>
+                        {cards.map((card, i) => {
+                            const cardProgress = Math.max(0, progress - i);
+                            const exitFraction = Math.min(cardProgress, 1); // 0→1 as card exits
+                            const exitPct = exitFraction * 120;
 
-                        return (
-                            <Box
-                                key={i}
-                                sx={{
-                                    position: "absolute",
-                                    inset: 0,
-                                    background: card.bg,
-                                    borderRadius: "28px",
-                                    /* card 0 on top, card 2 at back */
-                                    zIndex: cards.length - i,
-                                    px: { xs: 4, md: 5 },
-                                    pt: { xs: 5, md: 6 },
-                                    pb: { xs: 6, md: 7 },
-                                    textAlign: "center",
-                                    overflow: "hidden",
-                                    boxShadow: "0 32px 90px rgba(0,0,0,0.18)",
-                                    transform: [
-                                        `translateY(-${exitPct}%)`,
-                                        `rotateX(${isActive ? tilt.x : 0}deg)`,
-                                        `rotateY(${isActive ? tilt.y : 0}deg)`,
-                                        `rotate(${card.rotation}deg)`,
-                                    ].join(" "),
-                                    transition: isActive && isHovered
-                                        ? "transform 0.08s linear"
-                                        : "transform 0.55s cubic-bezier(0.16,1,0.3,1)",
-                                    willChange: "transform",
-                                }}
-                            >
-                                {/* Photo */}
+                            /*
+                             * As card scrolls out it rotates counter-clockwise:
+                             * left goes down, right goes up.
+                             * At exitFraction=0 → baseRotation, at 1 → baseRotation - 20deg
+                             */
+                            const displayRotation = card.rotation - exitFraction * 20;
+
+                            return (
                                 <Box
+                                    key={i}
                                     sx={{
-                                        width: { xs: 155, md: 185 },
-                                        height: { xs: 185, md: 215 },
-                                        borderRadius: "16px",
+                                        position: "absolute",
+                                        inset: 0,
+                                        background: card.bg,
+                                        borderRadius: "26px",
+                                        /* front card highest z */
+                                        zIndex: cards.length - i,
+                                        px: { xs: 3.5, md: 4.5 },
+                                        pt: { xs: 4.5, md: 5.5 },
+                                        pb: { xs: 5.5, md: 6.5 },
+                                        textAlign: "center",
                                         overflow: "hidden",
-                                        mx: "auto",
-                                        mb: 3.5,
-                                        position: "relative",
-                                        background: "#ccc",
+                                        boxShadow: "0 28px 80px rgba(0,0,0,0.20)",
+                                        transformOrigin: "center center",
+                                        transform: [
+                                            `translateY(-${exitPct}%)`,
+                                            `rotate(${displayRotation}deg)`,
+                                            `scale(${card.scale})`,
+                                        ].join(" "),
+                                        transition: "transform 0.55s cubic-bezier(0.16,1,0.3,1)",
+                                        willChange: "transform",
                                     }}
                                 >
-                                    <Image
-                                        src={card.img}
-                                        alt={card.title}
-                                        fill
-                                        style={{ objectFit: "cover" }}
-                                    />
-                                </Box>
-
-                                {/* Title */}
-                                <Typography
-                                    sx={{
-                                        fontSize: { xs: "3rem", md: "3.8rem" },
-                                        fontWeight: 800,
-                                        color: card.textColor,
-                                        lineHeight: 1,
-                                        letterSpacing: "-0.03em",
-                                        mb: 2.5,
-                                    }}
-                                >
-                                    {card.title}
-                                </Typography>
-
-                                {/* Body paragraphs */}
-                                {card.body.map((text, j) => (
-                                    <Typography
-                                        key={j}
+                                    {/* Photo */}
+                                    <Box
                                         sx={{
-                                            fontSize: { xs: "0.85rem", md: "0.9rem" },
-                                            color: card.subColor,
-                                            lineHeight: 1.65,
-                                            mb: j < card.body.length - 1 ? 2 : 0,
+                                            width: { xs: 148, md: 178 },
+                                            height: { xs: 178, md: 210 },
+                                            borderRadius: "14px",
+                                            overflow: "hidden",
+                                            mx: "auto",
+                                            mb: 3,
+                                            position: "relative",
+                                            background: "#ccc",
                                         }}
                                     >
-                                        {text}
+                                        <Image
+                                            src={card.img}
+                                            alt={card.title}
+                                            fill
+                                            style={{ objectFit: "cover" }}
+                                        />
+                                    </Box>
+
+                                    {/* Title */}
+                                    <Typography
+                                        sx={{
+                                            fontSize: { xs: "2.8rem", md: "3.6rem" },
+                                            fontWeight: 800,
+                                            color: card.textColor,
+                                            lineHeight: 1,
+                                            letterSpacing: "-0.03em",
+                                            mb: 2.5,
+                                        }}
+                                    >
+                                        {card.title}
                                     </Typography>
-                                ))}
-                            </Box>
-                        );
-                    })}
+
+                                    {/* Body */}
+                                    {card.body.map((text, j) => (
+                                        <Typography
+                                            key={j}
+                                            sx={{
+                                                fontSize: { xs: "0.82rem", md: "0.88rem" },
+                                                color: card.subColor,
+                                                lineHeight: 1.7,
+                                                mb: j < card.body.length - 1 ? 2 : 0,
+                                            }}
+                                        >
+                                            {text}
+                                        </Typography>
+                                    ))}
+                                </Box>
+                            );
+                        })}
+                    </Box>
                 </Box>
             </Box>
         </Box>

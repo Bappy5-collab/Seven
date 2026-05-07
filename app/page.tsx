@@ -11,6 +11,7 @@ import BlogSection from "@/components/BlogSection";
 import Footer from "@/components/Footer";
 import ServicesSection from "@/components/ServicesGrid";
 import LegacySection from "@/components/LegacySection";
+import ScrollText from "@/components/ScrollText";
 
 export default function Home() {
   return (
@@ -26,10 +27,10 @@ export default function Home() {
         <FeaturedWork />
         <ServicesSection />
         <LegacySection/>
-         
+        <BlogSection />
+        <ScrollText/>
         <CaseStudies />
         <AboutSection />
-        <BlogSection />
       </main>
       <Footer />
     </>
