@@ -90,7 +90,7 @@ function BlogCard({ post, index }: { post: (typeof posts)[0]; index: number }) {
                         backdropFilter: "blur(10px)",
                         background: "rgba(0,0,0,0.2)",
                         transform: cursor.visible ? "translateY(0%)" : "translateY(100%)",
-                        transition: "transform 0.5s ease",
+                       
                         // ✅ logic
                         borderTopLeftRadius: cursor.visible ? "0%" : "50%",
                         borderTopRightRadius: cursor.visible ? "0%" : "50%",
@@ -185,7 +185,7 @@ function BlogCard({ post, index }: { post: (typeof posts)[0]; index: number }) {
 
 export default function BlogSection() {
     return (
-        <Box sx={{ py: { xs: 8, md: 10 }, px: { xs: 2, md: 6 } }}>
+        <Box sx={{ pt: { xs: 8, md: 10 }, pb: { xs: 3, md: 4 }, px: { xs: 2, md: 6 } }}>
             {/* Header */}
 
             <Box

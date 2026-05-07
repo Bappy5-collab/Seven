@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { Box, Typography } from "@mui/material";
 import FacebookIcon from "@mui/icons-material/Facebook";
@@ -38,20 +39,54 @@ const linkColumns: string[][] = [
 ];
 
 export default function Footer() {
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    // reveal happens over the last viewport-height of scroll: while the page
+    // still has more than vh of scroll left, the footer is hidden below the
+    // fold; as the user nears the bottom it slides up into view, and on
+    // scroll-up it slides back down — "vitor theke ashbe" / "vitor e dhuke jabe".
+    const onScroll = () => {
+      const doc = document.documentElement;
+      const vh = window.innerHeight;
+      const remaining = doc.scrollHeight - window.scrollY - vh;
+      const p = 1 - Math.min(Math.max(remaining / vh, 0), 1);
+      setProgress(p);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
   return (
     <Box
       component="footer"
+      style={{
+        // slide up from below the viewport based on scroll progress. at p=0
+        // the footer sits fully below the fold (translateY(100%)), at p=1 it's
+        // anchored at the bottom (translateY(0)).
+        transform: `translateY(${(1 - progress) * 100}%)`,
+        willChange: "transform",
+      }}
       sx={{
-        bgcolor: "#f2f2f2",
+        position: "sticky",
+        bottom: 0,
+        zIndex: 0,
+       
         px: { xs: 1, md: 1.2 },
         pb: { xs: 1, md: 1.5 },
+        borderRadius: { xs: 4, md: 6 },
       }}
     >
       <Box
         sx={{
           bgcolor: "#000",
           color: "#fff",
-          borderRadius: { xs: 4, md: 6 },
+          borderRadius: { xs: "24px", md: "30px" },
           overflow: "hidden",
           px: { xs: 3, md: 5 },
           pt: { xs: 6, md: 9 },
@@ -92,7 +127,7 @@ export default function Footer() {
                 display: "flex",
                 alignItems: "center",
                 bgcolor: "#1c1c1c",
-                borderRadius: 999,
+                borderRadius: '50px',
                 pl: 3,
                 pr: 1,
                 py: 1,
@@ -108,7 +143,6 @@ export default function Footer() {
                   flex: 1,
                   bgcolor: "transparent",
                   border: "none",
-                   borderRadius:'50px',
                   outline: "none",
                   color: "#fff",
                   fontSize: "1rem",
@@ -141,7 +175,7 @@ export default function Footer() {
               </Box>
             </Box>
 
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2.5 }}>
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.80 }}>
               {socials.map((s) => (
                 <Box
                   key={s.label}
@@ -151,22 +185,40 @@ export default function Footer() {
                   sx={{
                     display: "inline-flex",
                     alignItems: "center",
-                    gap: 0.4,
+                    gap: 0.7,
                     color: "#fff",
                     textDecoration: "none",
                     transition: "opacity 0.15s",
                     "&:hover": { opacity: 0.7 },
-                    "&:hover .arrow": { transform: "translate(2px, -2px)" },
+                    "&:hover .arrow": {
+                      transform: "translate(2px, -2px)",
+                    },
                   }}
                 >
-                  {s.render()}
-                  <NorthEastIcon
-                    className="arrow"
+                  <Box
                     sx={{
-                      fontSize: 11,
-                      transition: "transform 0.15s",
+                      width: 40,
+                      height: 20,
+                      bgcolor: "#fff",
+                      borderRadius: '50px',
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "#000",
+                      flexShrink: 0,
                     }}
-                  />
+                  >
+                    {s.render()}
+
+                    <NorthEastIcon
+                      className="arrow"
+                      sx={{
+                        fontSize: 11,
+                        ml: 0.2,
+                        transition: "transform 0.15s",
+                      }}
+                    />
+                  </Box>
                 </Box>
               ))}
             </Box>
@@ -241,9 +293,9 @@ export default function Footer() {
             flexDirection: { xs: "column", md: "row" },
             justifyContent: "space-between",
             alignItems: { xs: "flex-start", md: "center" },
-            gap: 2,
-            fontSize: "0.85rem",
-            color: "#9a9a9a",
+            gap: 0.2,
+            fontSize: "0.75rem",
+            color: "white",
           }}
         >
           <Box
@@ -251,52 +303,60 @@ export default function Footer() {
               display: "flex",
               flexWrap: "wrap",
               alignItems: "center",
-              columnGap: { xs: 3, md: 4 },
-              rowGap: 1,
+              columnGap: { xs: 0.7, md: 1 },
+              rowGap: 0.1,
             }}
           >
             <span>
               © {new Date().getFullYear()} Rise at Seven Ltd. All rights reserved
             </span>
+
             <Box
               component="span"
               sx={{
                 display: { xs: "none", md: "inline-block" },
                 width: 4,
                 height: 4,
-                bgcolor: "#9a9a9a",
+                bgcolor: "white",
                 borderRadius: "50%",
               }}
             />
+
             <span>Company Number 11955187</span>
+
             <Box
               component="span"
               sx={{
                 display: { xs: "none", md: "inline-block" },
                 width: 4,
                 height: 4,
-                bgcolor: "#9a9a9a",
+                bgcolor: "white",
                 borderRadius: "50%",
               }}
             />
+
             <span>VAT Registered GB 322402945</span>
+
             <Box
               component="a"
               href="#"
               sx={{
-                color: "inherit",
+                color: "white",
                 textDecoration: "none",
+                lineHeight: 1,
                 "&:hover": { color: "#fff" },
               }}
             >
               Privacy Policy
             </Box>
+
             <Box
               component="a"
               href="#"
               sx={{
-                color: "inherit",
+                color: "white",
                 textDecoration: "none",
+                lineHeight: 1,
                 "&:hover": { color: "#fff" },
               }}
             >
@@ -308,8 +368,9 @@ export default function Footer() {
             component="a"
             href="#"
             sx={{
-              color: "inherit",
+              color: "white",
               textDecoration: "none",
+              lineHeight: 1,
               "&:hover": { color: "#fff" },
             }}
           >

@@ -21,7 +21,7 @@ const pillars = [
 
 export default function AboutSection() {
   return (
-    <Box sx={{ bgcolor: "#ffffff", py: { xs: 8, md: 12 }, borderBottom: "1px solid #e0e0e0" }}>
+    <Box sx={{ bgcolor: "#efeeec", py: { xs: 8, md: 12 }, borderBottom: "1px solid #e0e0e0" }}>
       <Container maxWidth="xl" sx={{ px: { xs: 3, md: 6 } }}>
         <Grid container spacing={0} sx={{ alignItems: "stretch" }}>
           {/* Left: About text */}

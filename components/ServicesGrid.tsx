@@ -26,7 +26,7 @@ const ServicesSection = () => {
   const [hovered, setHovered] = useState<string | null>(null);
 
   return (
-    <Box sx={{ background: "#f5f5f5", px: { xs: 3, md: 8 }, py: 8 }}>
+    <Box sx={{  px: { xs: 3, md: 8 }, py: 8 }}>
       {/* Header */}
       <Box
         sx={{
@@ -40,18 +40,82 @@ const ServicesSection = () => {
           Our Services
         </Typography>
 
-        <Button
-          sx={{
-            borderRadius: "999px",
-            px: 3,
-            py: 1,
-            background: "#fff",
-            color: "#000",
-            textTransform: "none",
-          }}
-        >
-          View All Services ↗
-        </Button>
+         <Button
+                            sx={{
+                                borderRadius: "999px",
+                                px: 4,
+                                py: 1.5,
+                                background: "#fff",
+                                color: "#111",
+                                fontWeight: 600,
+                                fontSize: "0.88rem",
+                                textTransform: "none",
+                                boxShadow: "none",
+                                position: "relative",
+                                overflow: "hidden",
+
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                lineHeight: 1,
+
+                                "&:hover": {
+                                    background: "#f5f5f5",
+                                },
+
+                                "&:hover .text": {
+                                    transform: "translateY(-120%)",
+                                },
+
+                                "&:hover .text-hover": {
+                                    transform: "translateY(0%)",
+                                },
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    position: "relative",
+                                    height: "1.2em",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    overflow: "hidden",
+                                }}
+                            >
+                                {/* Default text */}
+                                <Box
+                                    className="text"
+                                    sx={{
+                                        transition: "0.35s ease",
+                                        transform: "translateY(0%)",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                    }}
+                                >
+                                    View All Services ↗
+                                </Box>
+
+                                {/* Hover text */}
+                                <Box
+                                    className="text-hover"
+                                    sx={{
+                                        position: "absolute",
+                                        top: 0,
+                                        left: 0,
+                                        width: "100%",
+                                        height: "100%",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        transform: "translateY(120%)",
+                                        transition: "0.35s ease",
+                                    }}
+                                >
+                                    View All Services ↗
+                                </Box>
+                            </Box>
+                        </Button>
       </Box>
 
       <Box sx={{ borderBottom: "1px solid #ddd", mb: 4 }} />

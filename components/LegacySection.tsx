@@ -104,7 +104,7 @@ export default function LegacySection() {
                         /* room for rotated corners of back cards */
                         p: "40px",
                         mx: "auto",
-                        mb:{xs:6, mb:8},
+                        mb:{xs:1, md:2},
                     }}
                 >
                     {/* Inner anchor — cards rotate around THIS box's center */}

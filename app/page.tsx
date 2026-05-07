@@ -12,6 +12,7 @@ import Footer from "@/components/Footer";
 import ServicesSection from "@/components/ServicesGrid";
 import LegacySection from "@/components/LegacySection";
 import ScrollText from "@/components/ScrollText";
+import ChoosingConsumers from "@/components/ChoosingConsumers";
 
 export default function Home() {
   return (
@@ -23,14 +24,13 @@ export default function Home() {
         <HeroSection />
       </div>
       <main>
-        <DrivingDemand/>
+        <DrivingDemand />
         <FeaturedWork />
         <ServicesSection />
-        <LegacySection/>
+        <ChoosingConsumers />
+        <LegacySection />
         <BlogSection />
-        <ScrollText/>
-        <CaseStudies />
-        <AboutSection />
+        <ScrollText />
       </main>
       <Footer />
     </>

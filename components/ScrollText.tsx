@@ -58,7 +58,7 @@ export default function ScrollText() {
   const PER_LETTER = STAGGER * 1.6 || 0.06;
 
   return (
-    <Box ref={containerRef} sx={{ height: "500vh", background: "#f2f2f2" }}>
+    <Box ref={containerRef} sx={{ height: "300vh" }}>
       <Box
         sx={{
           position: "sticky",
