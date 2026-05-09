@@ -41,9 +41,10 @@ const ServiceItem = ({
       transition: "border-radius 0.45s ease",
     }}
   >
-    {/* Background image */}
+    {/* Background image — desktop hover only */}
     <Box
       sx={{
+        display: { xs: "none", md: "block" },
         position: "absolute",
         inset: 0,
         opacity: isHover ? 1 : 0,
@@ -81,17 +82,37 @@ const ServiceItem = ({
         zIndex: 2,
         display: "flex",
         alignItems: "center",
-        gap: { xs: 1.5, md: 2.5 },
-        py: { xs: 3, md: 4 },
-        px: { xs: 2, md: 3 },
+        gap: { xs: 2, md: 2.5 },
+        py: { xs: 2, md: 4 },
+        px: { xs: 0, md: 3 },
       }}
     >
+      {/* Mobile-only thumbnail */}
       <Box
         sx={{
-          display: "flex",
+          display: { xs: "block", md: "none" },
+          width: 56,
+          height: 56,
+          borderRadius: "10px",
+          overflow: "hidden",
+          flexShrink: 0,
+        }}
+      >
+        <Box
+          component="img"
+          src={item.image}
+          alt=""
+          sx={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+        />
+      </Box>
+
+      {/* Desktop hover arrow */}
+      <Box
+        sx={{
+          display: { xs: "none", md: "flex" },
           alignItems: "center",
           justifyContent: "center",
-          width: isHover ? { xs: 36, md: 48 } : 0,
+          width: isHover ? 48 : 0,
           opacity: isHover ? 1 : 0,
           transform: isHover ? "translateX(0)" : "translateX(-10px)",
           overflow: "hidden",
@@ -101,18 +122,20 @@ const ServiceItem = ({
           flexShrink: 0,
         }}
       >
-        <NorthEastIcon sx={{ fontSize: { xs: 28, md: 38 } }} />
+        <NorthEastIcon sx={{ fontSize: 38 }} />
       </Box>
 
       <Typography
         sx={{
-          fontSize: { xs: "28px", md: "40px" },
+          fontSize: { xs: "1.55rem", md: "40px" },
           fontWeight: 500,
           color: isHover ? "#fff" : "#000",
           transition: "color 0.3s ease",
-          whiteSpace: "nowrap",
+          whiteSpace: { xs: "normal", md: "nowrap" },
+          lineHeight: { xs: 1.1, md: "inherit" },
+          letterSpacing: { xs: "-0.02em", md: "inherit" },
           overflow: "hidden",
-          textOverflow: "ellipsis",
+          textOverflow: { xs: "clip", md: "ellipsis" },
         }}
       >
         {item.title}
@@ -126,10 +149,63 @@ const ServicesSection = () => {
 
   return (
     <Box sx={{ px: { xs: 3, md: 8 }, py: 8 }}>
-      {/* Header */}
+      {/* Mobile heading: "Our [img] Services" */}
+      <Box sx={{ display: { xs: "block", md: "none" }, mb: 4 }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            flexWrap: "wrap",
+            columnGap: 1.2,
+            rowGap: 0.5,
+          }}
+        >
+          <Typography
+            sx={{
+              fontSize: "3.6rem",
+              fontWeight: 600,
+              lineHeight: 1,
+              letterSpacing: "-0.03em",
+              color: "#111",
+            }}
+          >
+            Our
+          </Typography>
+          <Box
+            sx={{
+              width: 56,
+              height: 56,
+              borderRadius: "12px",
+              overflow: "hidden",
+              flexShrink: 0,
+            }}
+          >
+            <Box
+              component="img"
+              src="/Banner/Driving.png"
+              alt=""
+              sx={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+            />
+          </Box>
+          <Typography
+            sx={{
+              fontSize: "3.6rem",
+              fontWeight: 600,
+              lineHeight: 1,
+              letterSpacing: "-0.03em",
+              color: "#111",
+              width: "100%",
+            }}
+          >
+            Services
+          </Typography>
+        </Box>
+      </Box>
+
+      {/* Desktop header */}
       <Box
         sx={{
-          display: "flex",
+          display: { xs: "none", md: "flex" },
           justifyContent: "space-between",
           alignItems: "center",
           mb: 6,
@@ -204,7 +280,7 @@ const ServicesSection = () => {
         </Button>
       </Box>
 
-      <Box sx={{ borderBottom: "1px solid #ddd", mb: 4 }} />
+      <Box sx={{ display: { xs: "none", md: "block" }, borderBottom: "1px solid #ddd", mb: 4 }} />
 
       {/* Grid */}
       <Box
@@ -238,6 +314,30 @@ const ServicesSection = () => {
           ))}
         </Box>
       </Box>
+
+      {/* Mobile-only: full-width "View All Services" button at the bottom */}
+      <Button
+        fullWidth
+        sx={{
+          display: { xs: "flex", md: "none" },
+          mt: 4,
+          borderRadius: "999px",
+          py: 2,
+          background: "#fff",
+          color: "#111",
+          fontWeight: 600,
+          fontSize: "1rem",
+          textTransform: "none",
+          boxShadow: "none",
+          border: "1px solid #ddd",
+          alignItems: "center",
+          justifyContent: "center",
+          lineHeight: 1,
+          "&:hover": { background: "#f5f5f5" },
+        }}
+      >
+        View All Services ↗
+      </Button>
     </Box>
   );
 };

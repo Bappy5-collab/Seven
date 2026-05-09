@@ -6,19 +6,15 @@ import {
   Button,
   IconButton,
   Drawer,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
   useMediaQuery,
   useTheme,
   Typography,
   Badge,
 } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import NorthEastIcon from "@mui/icons-material/NorthEast";
 import AddIcon from "@mui/icons-material/Add";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 type DropdownItem = { label: string; image: string };
 type DropdownConfig = {
@@ -123,6 +119,7 @@ export default function Navbar() {
   const [hoveredItem, setHoveredItem] = useState<DropdownItem | null>(null);
   const [atTop, setAtTop] = useState(true);
   const [hidden, setHidden] = useState(false);
+  const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -617,9 +614,25 @@ export default function Navbar() {
           {isMobile && (
             <IconButton
               onClick={() => setDrawerOpen(true)}
-              sx={{ color: scrolled ? "#111" : "#fff", transition: "color 0.3s ease" }}
+              sx={{
+                color: scrolled ? "#111" : "#fff",
+                transition: "color 0.3s ease",
+                width: 44,
+                height: 44,
+              }}
             >
-              <MenuIcon />
+              {/* 2-line hamburger */}
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "6px",
+                  width: 22,
+                }}
+              >
+                <Box sx={{ height: "2px", bgcolor: "currentColor", borderRadius: "2px" }} />
+                <Box sx={{ height: "2px", bgcolor: "currentColor", borderRadius: "2px" }} />
+              </Box>
             </IconButton>
           )}
         </Box>
@@ -627,20 +640,35 @@ export default function Navbar() {
 
       {/* Mobile Drawer */}
       <Drawer
-        anchor="right"
+        anchor="top"
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
-        slotProps={{ paper: { sx: { width: "100%", bgcolor: "#000" } } }}
+        slotProps={{
+          paper: {
+            sx: {
+              width: "auto",
+              m: "12px",
+              borderRadius: "24px",
+              bgcolor: "rgba(20,20,20,0.78)",
+              backdropFilter: "blur(22px) saturate(160%)",
+              WebkitBackdropFilter: "blur(22px) saturate(160%)",
+              boxShadow: "0 18px 60px rgba(0,0,0,0.45)",
+              overflow: "hidden",
+              maxHeight: "calc(100vh - 24px)",
+            },
+          },
+        }}
       >
-        <Box sx={{ p: 3 }}>
-          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 4 }}>
+        <Box sx={{ px: 3, pt: 2.5, pb: 3 }}>
+          {/* Header: logo + close */}
+          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
             <Typography
               sx={{
                 color: "#fff",
                 fontFamily: "Inter, sans-serif",
                 fontWeight: 700,
                 fontStyle: "normal",
-                fontSize: "1.6rem",
+                fontSize: "1.4rem",
                 letterSpacing: "-0.04em",
                 lineHeight: 1,
                 display: "inline-flex",
@@ -667,38 +695,131 @@ export default function Navbar() {
               </Box>
               <Box component="span" sx={{ fontSize: "0.32em", fontWeight: 500, ml: "0.15em", mt: "0.15em", lineHeight: 1 }}>®</Box>
             </Typography>
-            <IconButton onClick={() => setDrawerOpen(false)} sx={{ color: "#fff" }}>
-              <CloseIcon />
+            <IconButton
+              onClick={() => setDrawerOpen(false)}
+              sx={{
+                color: "#fff",
+                p: 0.5,
+              }}
+            >
+              <CloseIcon sx={{ fontSize: "1.8rem" }} />
             </IconButton>
           </Box>
-          <List>
-            {navLinks.map((link) => (
-              <ListItem key={link.label} disablePadding>
-                <ListItemButton
-                  onClick={() => setDrawerOpen(false)}
-                  sx={{ py: 1.5, borderBottom: "1px solid #222", "&:hover": { bgcolor: "#111" } }}
-                >
-                  <ListItemText
-                    primary={link.label}
-                    slotProps={{
-                      primary: { style: { color: "#fff", fontWeight: 700, fontSize: "1.3rem" } },
+
+          {/* Menu items */}
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 0.2, mb: 3 }}>
+            {navLinks.map((link) => {
+              const isExpanded = mobileExpanded === link.label;
+              const subItems = link.dropdown?.columns.flat() ?? [];
+              return (
+                <Box key={link.label}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      py: 0.4,
                     }}
-                  />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
+                  >
+                    <Typography
+                      onClick={() => {
+                        if (!link.hasDropdown) setDrawerOpen(false);
+                      }}
+                      sx={{
+                        color: "#fff",
+                        fontWeight: 600,
+                        fontSize: "1.85rem",
+                        letterSpacing: "-0.02em",
+                        lineHeight: 1.15,
+                        cursor: "pointer",
+                        flex: 1,
+                      }}
+                    >
+                      {link.label}
+                    </Typography>
+                    {link.hasDropdown && (
+                      <Box
+                        onClick={() =>
+                          setMobileExpanded((cur) => (cur === link.label ? null : link.label))
+                        }
+                        sx={{
+                          width: 30,
+                          height: 30,
+                          borderRadius: "50%",
+                          border: "1px solid rgba(255,255,255,0.35)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          flexShrink: 0,
+                          ml: 1.5,
+                          cursor: "pointer",
+                          transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)",
+                          transition: "transform 0.3s ease",
+                        }}
+                      >
+                        <KeyboardArrowDownIcon sx={{ color: "#fff", fontSize: "1.15rem" }} />
+                      </Box>
+                    )}
+                  </Box>
+
+                  {/* Sub-items reveal */}
+                  {link.hasDropdown && (
+                    <Box
+                      sx={{
+                        overflow: "hidden",
+                        maxHeight: isExpanded ? `${subItems.length * 44 + 16}px` : 0,
+                        opacity: isExpanded ? 1 : 0,
+                        transition: "max-height 0.35s ease, opacity 0.25s ease",
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 0.4,
+                          pl: 1.5,
+                          py: 0.8,
+                        }}
+                      >
+                        {subItems.map((item) => (
+                          <Typography
+                            key={item.label}
+                            onClick={() => setDrawerOpen(false)}
+                            sx={{
+                              color: "rgba(255,255,255,0.78)",
+                              fontWeight: 500,
+                              fontSize: "1.05rem",
+                              letterSpacing: "-0.01em",
+                              lineHeight: 1.4,
+                              cursor: "pointer",
+                              "&:hover": { color: "#fff" },
+                            }}
+                          >
+                            {item.label}
+                          </Typography>
+                        ))}
+                      </Box>
+                    </Box>
+                  )}
+                </Box>
+              );
+            })}
+          </Box>
+
+          {/* Get In Touch button */}
           <Button
             fullWidth
+            endIcon={<NorthEastIcon sx={{ fontSize: "0.95rem !important" }} />}
             sx={{
-              mt: 4,
               bgcolor: "#fff",
               color: "#000",
-              fontWeight: 700,
-              fontSize: "1rem",
-              py: 1.5,
-              borderRadius: "50px",
+              fontWeight: 600,
+              fontSize: "1.05rem",
+              textTransform: "none",
+              py: 1.7,
+              borderRadius: "999px",
               "&:hover": { bgcolor: "#f0f0f0" },
+              "& .MuiButton-endIcon": { ml: 0.6 },
             }}
           >
             Get In Touch

@@ -47,7 +47,9 @@ const cards = [
 
 export default function LegacySection() {
     const trackRef = useRef<HTMLDivElement>(null);
+    const scrollerRef = useRef<HTMLDivElement>(null);
     const [progress, setProgress] = useState(0);
+    const [carouselProgress, setCarouselProgress] = useState(0);
 
     useEffect(() => {
         const onScroll = () => {
@@ -61,10 +63,159 @@ export default function LegacySection() {
         return () => window.removeEventListener("scroll", onScroll);
     }, []);
 
+    useEffect(() => {
+        const el = scrollerRef.current;
+        if (!el) return;
+        const onScroll = () => {
+            const max = el.scrollWidth - el.clientWidth;
+            if (max <= 0) {
+                setCarouselProgress(0);
+                return;
+            }
+            setCarouselProgress(el.scrollLeft / max);
+        };
+        onScroll();
+        el.addEventListener("scroll", onScroll, { passive: true });
+        return () => el.removeEventListener("scroll", onScroll);
+    }, []);
+
     return (
+        <>
+        {/* Mobile-only horizontal carousel */}
+        <Box
+            sx={{
+                display: { xs: "block", md: "none" },
+                py: 4,
+                px: 3,
+            }}
+        >
+            <Typography
+                sx={{
+                    fontSize: "0.95rem",
+                    fontWeight: 700,
+                    color: "#111",
+                    letterSpacing: "0.01em",
+                    textAlign: "center",
+                    mb: 3,
+                }}
+            >
+                Legacy In The Making
+            </Typography>
+
+            <Box
+                ref={scrollerRef}
+                sx={{
+                    display: "flex",
+                    gap: 2,
+                    overflowX: "auto",
+                    scrollSnapType: "x mandatory",
+                    WebkitOverflowScrolling: "touch",
+                    mx: -3,
+                    px: 3,
+                    pb: 1,
+                    "&::-webkit-scrollbar": { display: "none" },
+                    scrollbarWidth: "none",
+                }}
+            >
+                {cards.map((card, i) => (
+                    <Box
+                        key={i}
+                        sx={{
+                            flex: "0 0 88%",
+                            scrollSnapAlign: "center",
+                            background: card.bg,
+                            borderRadius: "20px",
+                            px: 2.5,
+                            pt: 2,
+                            pb: 3,
+                            textAlign: "center",
+                            boxShadow: "0 18px 40px rgba(0,0,0,0.10)",
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                position: "relative",
+                                width: "100%",
+                                aspectRatio: "16 / 11",
+                                borderRadius: "12px",
+                                overflow: "hidden",
+                                mb: 2,
+                                background: "#ccc",
+                            }}
+                        >
+                            <Image
+                                src={card.img}
+                                alt={card.title}
+                                fill
+                                sizes="(max-width: 768px) 88vw, 0px"
+                                style={{ objectFit: "cover" }}
+                            />
+                        </Box>
+
+                        <Typography
+                            sx={{
+                                fontSize: "1.9rem",
+                                fontWeight: 800,
+                                color: card.textColor,
+                                lineHeight: 1,
+                                letterSpacing: "-0.03em",
+                                mb: 1.5,
+                            }}
+                        >
+                            {card.title}
+                        </Typography>
+
+                        {card.body.map((text, j) => (
+                            <Typography
+                                key={j}
+                                sx={{
+                                    fontSize: "0.82rem",
+                                    color: card.subColor,
+                                    lineHeight: 1.55,
+                                    mb: j < card.body.length - 1 ? 1.4 : 0,
+                                }}
+                            >
+                                {text}
+                            </Typography>
+                        ))}
+                    </Box>
+                ))}
+            </Box>
+
+            {/* Progress bar */}
+            <Box
+                sx={{
+                    position: "relative",
+                    width: "60%",
+                    mx: "auto",
+                    mt: 3,
+                    height: 4,
+                    bgcolor: "#e2e2e2",
+                    borderRadius: 2,
+                }}
+            >
+                <Box
+                    sx={{
+                        position: "absolute",
+                        top: 0,
+                        height: "100%",
+                        width: `${100 / cards.length}%`,
+                        left: `${carouselProgress * (100 - 100 / cards.length)}%`,
+                        bgcolor: "#111",
+                        borderRadius: 2,
+                        transition: "left 0.05s linear",
+                    }}
+                />
+            </Box>
+        </Box>
+
+        {/* Desktop-only sticky rotating-stack (existing) */}
         <Box
             ref={trackRef}
-            sx={{ height: `calc(${(cards.length + 1) * SCROLL_PER_CARD}px + 100vh)` }}
+            sx={{
+                display: { xs: "none", md: "block" },
+                height: `calc(${cards.length * SCROLL_PER_CARD}px + 100vh)`,
+            }}
         >
             <Box
                 sx={{
@@ -77,7 +228,7 @@ export default function LegacySection() {
                     alignItems: "center",
                     justifyContent: "center",
                     overflow: "hidden",
-                    mt:{xs:6, md:8},
+                    mt:{xs:3, md:4},
                 }}
             >
                 <Typography
@@ -203,5 +354,6 @@ export default function LegacySection() {
                 </Box>
             </Box>
         </Box>
+        </>
     );
 }

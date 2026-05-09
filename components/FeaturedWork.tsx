@@ -2,19 +2,254 @@
 import { Box, Button, Typography, useMediaQuery, useTheme } from "@mui/material";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import NorthEastIcon from "@mui/icons-material/NorthEast";
+import SearchIcon from "@mui/icons-material/Search";
+import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 
-const projects = [
-    { name: "SIXT", date: "2023-2025", img: "/FeaturesWork/1.png" },
-    { name: "Dojo - B2B", date: "2021-2025", img: "/FeaturesWork/2.png" },
-    { name: "Magnet Trade - B2B", date: "2023-2024", img: "/FeaturesWork/3.png" },
-    { name: "Leading E Sim brand globally", date: "2023-2025", img: "/FeaturesWork/4.png" },
-    { name: "JD Sports", date: "2025", img: "/FeaturesWork/5.png" },
-    { name: "Parkdean Resorts", date: "2019-2025", img: "/FeaturesWork/1.png" },
-    { name: "Pooky", date: "2025", img: "/FeaturesWork/2.png" },
-    { name: "Revolution Beauty", date: "2022-2025", img: "/FeaturesWork/3.png" },
-    { name: "Lloyds Pharmacy", date: "2022-23", img: "/FeaturesWork/4.png" },
-    { name: "PrettyLittleThing", date: "", img: "/FeaturesWork/5.png" },
+type Project = {
+    name: string;
+    date: string;
+    img: string;
+    hoverColor: string;
+    hoverTitle: string;
+    pillLabel: string;
+};
+
+const projects: Project[] = [
+    {
+        name: "SIXT",
+        date: "2023-2025",
+        img: "/FeaturesWork/1.png",
+        hoverColor: "#cc7a3d",
+        hoverTitle: "An extra 3m clicks regionally through SEO",
+        pillLabel: "Car rental",
+    },
+    {
+        name: "Dojo - B2B",
+        date: "2021-2025",
+        img: "/FeaturesWork/2.png",
+        hoverColor: "#fcd0bb",
+        hoverTitle: "A B2B success story for Dojo card machines",
+        pillLabel: "Card Machines",
+    },
+    {
+        name: "Magnet Trade - B2B",
+        date: "2023-2024",
+        img: "/FeaturesWork/3.png",
+        hoverColor: "#d9b8ff",
+        hoverTitle: "A full service SEO success story 170%+ increase",
+        pillLabel: "Trade",
+    },
+    {
+        name: "Leading E Sim brand globally",
+        date: "2023-2025",
+        img: "/FeaturesWork/4.png",
+        hoverColor: "#9bd9c9",
+        hoverTitle: "Scaling a global eSIM brand across 4 markets",
+        pillLabel: "eSIM",
+    },
+    {
+        name: "JD Sports",
+        date: "2025",
+        img: "/FeaturesWork/5.png",
+        hoverColor: "#111",
+        hoverTitle: "JD Sports tops Black Friday SERPs across the UK",
+        pillLabel: "Sportswear",
+    },
+    {
+        name: "Parkdean Resorts",
+        date: "2019-2025",
+        img: "/FeaturesWork/1.png",
+        hoverColor: "#5fb27a",
+        hoverTitle: "6 years of growth driving holiday bookings",
+        pillLabel: "Holidays",
+    },
+    {
+        name: "Pooky",
+        date: "2025",
+        img: "/FeaturesWork/2.png",
+        hoverColor: "#f3d4d8",
+        hoverTitle: "A lighting brand that shines in organic search",
+        pillLabel: "Lighting",
+    },
+    {
+        name: "Revolution Beauty",
+        date: "2022-2025",
+        img: "/FeaturesWork/3.png",
+        hoverColor: "#ec5b8d",
+        hoverTitle: "+220% organic revenue for Revolution Beauty",
+        pillLabel: "Beauty",
+    },
+    {
+        name: "Lloyds Pharmacy",
+        date: "2022-23",
+        img: "/FeaturesWork/4.png",
+        hoverColor: "#23408a",
+        hoverTitle: "Lloyds Pharmacy: from category leader to category dominator",
+        pillLabel: "Pharmacy",
+    },
+    {
+        name: "PrettyLittleThing",
+        date: "",
+        img: "/FeaturesWork/5.png",
+        hoverColor: "#ff5fa8",
+        hoverTitle: "Owning fashion search for PrettyLittleThing",
+        pillLabel: "Fashion",
+    },
 ];
+
+function ProjectImage({ project, isActive, isMobile }: { project: Project; isActive: boolean; isMobile: boolean }) {
+    const [cursor, setCursor] = useState({ x: 0, y: 0, visible: false });
+    const ref = useRef<HTMLDivElement>(null);
+
+    const handleMove = (e: React.MouseEvent) => {
+        const rect = ref.current?.getBoundingClientRect();
+        if (!rect) return;
+        setCursor({ x: e.clientX - rect.left, y: e.clientY - rect.top, visible: true });
+    };
+
+    const isDark = project.hoverColor === "#111" || project.hoverColor === "#23408a" || project.hoverColor === "#ec5b8d" || project.hoverColor === "#ff5fa8";
+    const titleColor = isDark ? "#fff" : "#111";
+
+    return (
+        <Box
+            ref={ref}
+            onMouseMove={handleMove}
+            onMouseEnter={() => setCursor((c) => ({ ...c, visible: true }))}
+            onMouseLeave={() => setCursor((c) => ({ ...c, visible: false }))}
+            sx={{
+                height: "84vh",
+                mb: "14px",
+                borderRadius: { xs: "10px", md: "14px" },
+                overflow: "hidden",
+                position: "relative",
+                flexShrink: 0,
+                cursor: cursor.visible ? "none" : "default",
+            }}
+        >
+            <Image
+                src={project.img}
+                alt={project.name}
+                fill
+                style={{ objectFit: "cover" }}
+                sizes="(max-width: 768px) 100vw, 60vw"
+            />
+
+            {/* Hover overlay — colored background, title, pill */}
+            <Box
+                sx={{
+                    position: "absolute",
+                    inset: 0,
+                    bgcolor: project.hoverColor,
+                    opacity: cursor.visible ? 1 : 0,
+                    transition: "opacity 0.4s ease",
+                    pointerEvents: "none",
+                    zIndex: 1,
+                    display: { xs: "none", md: "block" },
+                }}
+            >
+                {/* Hover title — top-left */}
+                <Typography
+                    sx={{
+                        position: "absolute",
+                        top: { md: 36, lg: 48 },
+                        left: { md: 36, lg: 48 },
+                        right: { md: 36, lg: 48 },
+                        color: titleColor,
+                        fontWeight: 700,
+                        fontSize: { md: "2.2rem", lg: "2.8rem", xl: "3.2rem" },
+                        lineHeight: 1.1,
+                        letterSpacing: "-0.02em",
+                    }}
+                >
+                    {project.hoverTitle}
+                </Typography>
+
+                {/* Bottom-right pill with search icon + label + chart icon */}
+                <Box
+                    sx={{
+                        position: "absolute",
+                        bottom: { md: 28, lg: 36 },
+                        right: { md: 28, lg: 36 },
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 1,
+                        bgcolor: "rgba(255,255,255,0.18)",
+                        backdropFilter: "blur(10px)",
+                        WebkitBackdropFilter: "blur(10px)",
+                        borderRadius: "999px",
+                        px: 2,
+                        py: 1,
+                    }}
+                >
+                    <SearchIcon sx={{ fontSize: "1.05rem", color: titleColor }} />
+                    <Typography sx={{ fontSize: "0.95rem", fontWeight: 500, color: titleColor, lineHeight: 1 }}>
+                        {project.pillLabel}
+                    </Typography>
+                    <TrendingUpIcon sx={{ fontSize: "1.05rem", color: titleColor }} />
+                </Box>
+            </Box>
+
+            {/* Cursor-following circle with arrow — only inside image area */}
+            {!isMobile && (
+                <Box
+                    sx={{
+                        position: "absolute",
+                        left: cursor.x,
+                        top: cursor.y,
+                        transform: "translate(-50%, -50%)",
+                        width: 110,
+                        height: 110,
+                        borderRadius: "50%",
+                        bgcolor: "#b8f5e4",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        pointerEvents: "none",
+                        zIndex: 5,
+                        opacity: cursor.visible ? 1 : 0,
+                        transition: "opacity 0.2s ease",
+                    }}
+                >
+                    <NorthEastIcon sx={{ color: "#000", fontSize: "2rem" }} />
+                </Box>
+            )}
+
+            {/* Mobile overlay (project name + date) */}
+            <Box
+                sx={{
+                    display: { xs: "flex", md: "none" },
+                    position: "absolute",
+                    bottom: 20,
+                    left: 16,
+                    flexDirection: "column",
+                    gap: 0.3,
+                    opacity: isActive ? 1 : 0,
+                    transition: "opacity 0.5s ease",
+                    pointerEvents: "none",
+                    zIndex: 2,
+                }}
+            >
+                <Typography
+                    sx={{
+                        color: "#fff",
+                        fontWeight: 700,
+                        fontSize: "1.6rem",
+                        lineHeight: 1.1,
+                        letterSpacing: "-0.02em",
+                    }}
+                >
+                    {project.name}
+                </Typography>
+                {project.date && (
+                    <Typography sx={{ color: "rgba(255,255,255,0.6)", fontSize: "0.72rem" }}>
+                        [{project.date}]
+                    </Typography>
+                )}
+            </Box>
+        </Box>
+    );
+}
 
 const STEP_VH = 35;
 
@@ -86,6 +321,7 @@ export default function FeaturedWork() {
 
     const theme = useTheme();
     const isLg = useMediaQuery(theme.breakpoints.up("lg"));
+    const isMobile = useMediaQuery(theme.breakpoints.down("md"));
     const rowHeight = isLg ? 78 : 68;
 
     const progressIndex = smoothProgress * (projects.length - 1);
@@ -120,7 +356,7 @@ export default function FeaturedWork() {
                         sx={{
                             display: { xs: "none", md: "flex" },
                             flexDirection: "column",
-                            width: { md: "43%", lg: "40%" },
+                            width: "50%",
                             flexShrink: 0,
                             height: "100%",
                             pt: 8,
@@ -285,59 +521,12 @@ export default function FeaturedWork() {
                             }}
                         >
                             {projects.map((p, i) => (
-                                <Box
+                                <ProjectImage
                                     key={i}
-                                    sx={{
-                                        height: "84vh",
-                                        mb: "14px",
-                                        borderRadius: { xs: "10px", md: "14px" },
-                                        overflow: "hidden",
-                                        position: "relative",
-                                        flexShrink: 0,
-                                    }}
-                                >
-                                    <Image
-                                        src={p.img}
-                                        alt={p.name}
-                                        fill
-                                        style={{ objectFit: "cover" }}
-                                        sizes="(max-width: 768px) 100vw, 60vw"
-                                    />
-
-                                    {/* Mobile overlay */}
-                                    <Box
-                                        sx={{
-                                            display: { xs: "flex", md: "none" },
-                                            position: "absolute",
-                                            bottom: 20,
-                                            left: 16,
-                                            flexDirection: "column",
-                                            gap: 0.3,
-                                            opacity: i === activeIndex ? 1 : 0,
-                                            transition: "opacity 0.5s ease",
-                                            pointerEvents: "none",
-                                        }}
-                                    >
-                                        <Typography
-                                            sx={{
-                                                color: "#fff",
-                                                fontWeight: 700,
-                                                fontSize: "1.6rem",
-                                                lineHeight: 1.1,
-                                                letterSpacing: "-0.02em",
-                                            }}
-                                        >
-                                            {p.name}
-                                        </Typography>
-                                        {p.date && (
-                                            <Typography
-                                                sx={{ color: "rgba(255,255,255,0.6)", fontSize: "0.72rem" }}
-                                            >
-                                                [{p.date}]
-                                            </Typography>
-                                        )}
-                                    </Box>
-                                </Box>
+                                    project={p}
+                                    isActive={i === activeIndex}
+                                    isMobile={isMobile}
+                                />
                             ))}
                         </Box>
                     </Box>

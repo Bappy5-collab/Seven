@@ -17,13 +17,14 @@ export default function DrivingDemand() {
             <Box
                 sx={{
                     display: "flex",
-                    alignItems: "center",
+                    flexDirection: { xs: "column", md: "row" },
+                    alignItems: { xs: "flex-start", md: "center" },
                     px: { xs: 3, md: 8 },
                     mb: { xs: 8, md: 15 },
-                    gap: { xs: 3, md: 5 },
+                    gap: { xs: 2, md: 5 },
                 }}
             >
-                {/* Left text */}
+                {/* Left text — sits above the logos on mobile */}
                 <Typography
                     sx={{
                         fontSize: "0.78rem",
@@ -85,13 +86,20 @@ export default function DrivingDemand() {
                     px: { xs: 3, md: 8 },
                 }}
             >
-                {/* Left — paragraph */}
-                <Box sx={{ width: { xs: "100%", md: "45%" }, pt: { md: 1 } }}>
+                {/* Left — paragraph (desktop only; on mobile it renders inside the right block) */}
+                <Box
+                    sx={{
+                        width: { xs: "100%", md: "45%" },
+                        pt: { md: 1 },
+                        order: { xs: 2, md: 1 },
+                        display: { xs: "none", md: "block" },
+                    }}
+                >
                     <Typography
                         sx={{
                             fontSize: { xs: "1rem", md: "1.4rem" },
                             fontWeight: 600,
-                            lineHeight: 1,
+                            lineHeight: { xs: 1.4, md: 1 },
                             color: "#111",
                         }}
                     >
@@ -101,7 +109,7 @@ export default function DrivingDemand() {
                 </Box>
 
                 {/* Right — large heading + buttons */}
-                <Box sx={{ width: { xs: "100%", md: "58%" } }}>
+                <Box sx={{ width: { xs: "100%", md: "58%" }, order: { xs: 1, md: 2 } }}>
                     <Typography
                         component="h2"
                         sx={{
@@ -135,20 +143,43 @@ export default function DrivingDemand() {
                         </Box>
                     </Typography>
 
-                    <Stack direction="row" spacing={2} sx={{ mt: 4, alignItems: "center" }}>
+                    {/* Mobile-only paragraph — sits between heading and buttons */}
+                    <Typography
+                        sx={{
+                            display: { xs: "block", md: "none" },
+                            fontSize: "1rem",
+                            fontWeight: 600,
+                            lineHeight: 1.4,
+                            color: "#111",
+                            mt: 3,
+                        }}
+                    >
+                        A global team of search-first content marketers engineering semantic
+                        relevancy & category signals for both the internet and people
+                    </Typography>
+
+                    <Stack
+                        direction={{ xs: "column", md: "row" }}
+                        spacing={{ xs: 1.5, md: 2 }}
+                        sx={{
+                            mt: { xs: 3, md: 4 },
+                            alignItems: { xs: "stretch", md: "center" },
+                        }}
+                    >
                         <Button
                             sx={{
                                 borderRadius: "999px",
                                 px: 4,
-                                py: 1.5,
+                                py: { xs: 2, md: 1.5 },
                                 background: "#fff",
                                 color: "#111",
                                 fontWeight: 600,
-                                fontSize: "0.88rem",
+                                fontSize: { xs: "1rem", md: "0.88rem" },
                                 textTransform: "none",
                                 boxShadow: "none",
                                 position: "relative",
                                 overflow: "hidden",
+                                width: { xs: "100%", md: "auto" },
 
                                 display: "flex",
                                 alignItems: "center",
@@ -216,13 +247,13 @@ export default function DrivingDemand() {
                         <Button
                             sx={{
                                 borderRadius: "999px",
-                                px: 4,
-                                py: 1.5,
-                                background: "#fff",
+                                px: { xs: 0, md: 4 },
+                                py: { xs: 1, md: 1.5 },
+                                background: { xs: "transparent", md: "#fff" },
                                 color: "#111",
 
                                 fontWeight: 600,
-                                fontSize: "0.88rem",
+                                fontSize: { xs: "1rem", md: "0.88rem" },
                                 textTransform: "none",
                                 boxShadow: "none",
                                 position: "relative",
@@ -234,7 +265,7 @@ export default function DrivingDemand() {
                                 lineHeight: 1,
 
                                 "&:hover": {
-                                    background: "#f5f5f5",
+                                    background: { xs: "transparent", md: "#f5f5f5" },
                                 },
 
                                 "&:hover .text": {

@@ -99,11 +99,13 @@ export default function HeroSection() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          pt: { xs: "110px", md: "130px" },
+          pt: { xs: "100px", md: "130px" },
+          flexGrow: 1,
+          justifyContent: { xs: "center", md: "flex-start" },
         }}
       >
         {/* Awards badge */}
-        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", mb: 3 }}>
+        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", mb: { xs: 2, md: 3 } }}>
           <Typography
             sx={{
               color: "#fff",
@@ -182,7 +184,8 @@ export default function HeroSection() {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              flexWrap: "nowrap",
+              flexWrap: { xs: "wrap", md: "nowrap" },
+              rowGap: { xs: "0.1rem", md: 0 },
               gap: { xs: "0.4rem", md: "0.8rem" },
               mt: { xs: "0.1rem", md: "0.2rem" },
             }}
@@ -258,8 +261,11 @@ export default function HeroSection() {
           zIndex: 2,
           width: "100%",
           display: "flex",
+          flexDirection: { xs: "column", md: "row" },
           justifyContent: "space-between",
-          alignItems: "flex-end",
+          alignItems: { xs: "center", md: "flex-end" },
+          textAlign: { xs: "center", md: "left" },
+          gap: { xs: 2, md: 0 },
           px: { xs: 3, md: 5 },
           pb: 4,
           pt: 6,
@@ -272,6 +278,7 @@ export default function HeroSection() {
             maxWidth: "390px",
             lineHeight: 1.6,
             fontWeight: 500,
+            order: { xs: 2, md: 1 },
           }}
         >
           Organic media planners creating, distributing & optimising
@@ -281,11 +288,12 @@ export default function HeroSection() {
 
         <Typography
           sx={{
-          color: "white",
+            color: "white",
             fontSize: { xs: "0.72rem", md: "0.88rem" },
             maxWidth: "390px",
             lineHeight: 1.6,
             fontWeight: 500,
+            order: { xs: 1, md: 2 },
           }}
         >
           4 Global Offices serving

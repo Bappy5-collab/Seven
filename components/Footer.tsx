@@ -1,5 +1,4 @@
 "use client";
-import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { Box, Typography } from "@mui/material";
 import FacebookIcon from "@mui/icons-material/Facebook";
@@ -39,44 +38,10 @@ const linkColumns: string[][] = [
 ];
 
 export default function Footer() {
-  const [progress, setProgress] = useState(0);
-
-  useEffect(() => {
-    // reveal happens over the last viewport-height of scroll: while the page
-    // still has more than vh of scroll left, the footer is hidden below the
-    // fold; as the user nears the bottom it slides up into view, and on
-    // scroll-up it slides back down — "vitor theke ashbe" / "vitor e dhuke jabe".
-    const onScroll = () => {
-      const doc = document.documentElement;
-      const vh = window.innerHeight;
-      const remaining = doc.scrollHeight - window.scrollY - vh;
-      const p = 1 - Math.min(Math.max(remaining / vh, 0), 1);
-      setProgress(p);
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-    };
-  }, []);
-
   return (
     <Box
       component="footer"
-      style={{
-        // slide up from below the viewport based on scroll progress. at p=0
-        // the footer sits fully below the fold (translateY(100%)), at p=1 it's
-        // anchored at the bottom (translateY(0)).
-        transform: `translateY(${(1 - progress) * 100}%)`,
-        willChange: "transform",
-      }}
       sx={{
-        position: "sticky",
-        bottom: 0,
-        zIndex: 0,
-       
         px: { xs: 1, md: 1.2 },
         pb: { xs: 1, md: 1.5 },
         borderRadius: { xs: 4, md: 6 },
@@ -128,11 +93,12 @@ export default function Footer() {
                 alignItems: "center",
                 bgcolor: "#1c1c1c",
                 borderRadius: '50px',
-                pl: 3,
+                pl: { xs: 2.5, md: 3 },
                 pr: 1,
                 py: 1,
                 mb: 3.5,
-                maxWidth: 480,
+                maxWidth: { xs: "100%", md: 480 },
+                width: "100%",
               }}
             >
               <Box
@@ -266,7 +232,7 @@ export default function Footer() {
               letterSpacing: "-0.04em",
               lineHeight: 0.85,
               color: "#fff",
-              fontSize: { xs: "22vw", md: "15.5vw" },
+              fontSize: { xs: "16vw", md: "15.5vw" },
               whiteSpace: "nowrap",
             }}
           >
@@ -293,8 +259,8 @@ export default function Footer() {
             flexDirection: { xs: "column", md: "row" },
             justifyContent: "space-between",
             alignItems: { xs: "flex-start", md: "center" },
-            gap: 0.2,
-            fontSize: "0.75rem",
+            gap: { xs: 1.5, md: 0.2 },
+            fontSize: { xs: "0.7rem", md: "0.75rem" },
             color: "white",
           }}
         >
@@ -303,8 +269,8 @@ export default function Footer() {
               display: "flex",
               flexWrap: "wrap",
               alignItems: "center",
-              columnGap: { xs: 0.7, md: 1 },
-              rowGap: 0.1,
+              columnGap: { xs: 1, md: 1 },
+              rowGap: { xs: 0.6, md: 0.1 },
             }}
           >
             <span>

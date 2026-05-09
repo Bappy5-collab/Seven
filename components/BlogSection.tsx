@@ -1,30 +1,37 @@
 "use client";
 import { Box, Button, Typography } from "@mui/material";
 import Image from "next/image";
-import NorthEastIcon from "@mui/icons-material/NorthEast";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import { useRef, useState } from "react";
+import NorthEastIcon from "@mui/icons-material/NorthEast";
+import { useEffect, useRef, useState } from "react";
 
-const posts = [
+type Post = {
+    category?: string;
+    title: string;
+    author: string;
+    authorColor: string;
+    readTime: string;
+    img: string;
+};
+
+const posts: Post[] = [
     {
-        category: "News",
-        title: "Ryan McNamara Is Now Rise at Seven's Global Operations Director",
-        author: "Carrie Rose",
-        authorColor: "#c8b8a2",
-        readTime: "2 mins",
+        title: "Rise at Seven Appoints Hollie Lovell as Senior Operations Lead",
+        author: "Ray Saddiq",
+        authorColor: "#a2b8c8",
+        readTime: "3 mins",
         img: "/FeaturesWork/1.png",
     },
     {
-        category: "Food/Hospitality/Drink",
-        title: "Rise at Seven Appointed by Coneys to Drive Demand and Retail Growth for them in the Chocolate Confectionery Category",
+        title: "Rise at Seven Exits Sheffield and Triples Manchester as new HQ as they go for global expansion",
         author: "Ray Saddiq",
         authorColor: "#a2b8c8",
         readTime: "2 mins",
         img: "/FeaturesWork/2.png",
     },
     {
-        category: "Food/Hospitality/Drink",
-        title: "Rise at Seven Appointed by Langtins to drive demand and retail growth for Noomz",
+        category: "News",
+        title: "Ryan McNamara Is Now Rise at Seven's Global Operations Director",
         author: "Carrie Rose",
         authorColor: "#c8b8a2",
         readTime: "2 mins",
@@ -32,7 +39,7 @@ const posts = [
     },
 ];
 
-function BlogCard({ post, index }: { post: (typeof posts)[0]; index: number }) {
+function BlogCard({ post }: { post: Post }) {
     const [cursor, setCursor] = useState({ x: 0, y: 0, visible: false });
     const cardRef = useRef<HTMLDivElement>(null);
 
@@ -49,37 +56,34 @@ function BlogCard({ post, index }: { post: (typeof posts)[0]; index: number }) {
             onMouseEnter={() => setCursor((c) => ({ ...c, visible: true }))}
             onMouseLeave={() => setCursor((c) => ({ ...c, visible: false }))}
             sx={{
-                bgcolor: "#fff",
-                borderRadius: index === 2 ? "0px" : "18px", // ✅ 3rd card no radius
-                overflow: "hidden",
-                flex: 1,
+                flex: { xs: "0 0 86%", md: 1 },
                 minWidth: 0,
                 display: "flex",
                 flexDirection: "column",
                 cursor: "none",
                 position: "relative",
+                scrollSnapAlign: { xs: "center", md: "none" },
             }}
         >
             {/* Image */}
             <Box
                 sx={{
                     position: "relative",
-                    height: { xs: "220px", md: "280px" },
+                    aspectRatio: "1 / 1",
+                    borderRadius: "20px",
                     overflow: "hidden",
+                    bgcolor: "#eee",
                 }}
             >
                 <Image
                     src={post.img}
                     alt={post.title}
                     fill
-                    style={{
-                        objectFit: "cover",
-                        objectPosition: index === 1 ? "center" : "center", // ✅ 2nd card clean center
-                        transition: "all 0.4s ease",
-                    }}
+                    sizes="(max-width: 900px) 100vw, 33vw"
+                    style={{ objectFit: "cover" }}
                 />
 
-                {/* ✅ Blur overlay (bottom → top) */}
+                {/* Blur overlay (slides up from bottom) */}
                 <Box
                     sx={{
                         position: "absolute",
@@ -88,43 +92,48 @@ function BlogCard({ post, index }: { post: (typeof posts)[0]; index: number }) {
                         width: "100%",
                         height: "100%",
                         backdropFilter: "blur(10px)",
+                        WebkitBackdropFilter: "blur(10px)",
                         background: "rgba(0,0,0,0.2)",
                         transform: cursor.visible ? "translateY(0%)" : "translateY(100%)",
-                       
-                        // ✅ logic
                         borderTopLeftRadius: cursor.visible ? "0%" : "50%",
                         borderTopRightRadius: cursor.visible ? "0%" : "50%",
-
-                        // 🔥 key trick: delay only when entering
                         transition: cursor.visible
                             ? "transform 0.5s ease, border-radius 0.3s ease 0.3s"
                             : "transform 0.5s ease, border-radius 0.3s ease",
-
                         zIndex: 1,
+                        pointerEvents: "none",
                     }}
                 />
 
-                {/* Category pill */}
-                <Box
-                    sx={{
-                        position: "absolute",
-                        top: 14,
-                        left: 14,
-                        bgcolor: "rgba(255,255,255,0.82)",
-                        backdropFilter: "blur(6px)",
-                        borderRadius: "999px",
-                        px: 1.5,
-                        py: 0.4,
-                        zIndex: 2,
-                    }}
-                >
-                    <Typography sx={{ fontSize: "0.72rem", fontWeight: 600, color: "#111", lineHeight: 1.5 }}>
-                        {post.category}
-                    </Typography>
-                </Box>
+                {/* Category badge — only on cards that have one */}
+                {post.category && (
+                    <Box
+                        sx={{
+                            position: "absolute",
+                            top: 16,
+                            left: 16,
+                            bgcolor: "#fff",
+                            borderRadius: "999px",
+                            px: 1.6,
+                            py: 0.55,
+                            zIndex: 2,
+                        }}
+                    >
+                        <Typography
+                            sx={{
+                                fontSize: "0.82rem",
+                                fontWeight: 600,
+                                color: "#111",
+                                lineHeight: 1.4,
+                            }}
+                        >
+                            {post.category}
+                        </Typography>
+                    </Box>
+                )}
             </Box>
 
-            {/* Cursor-following circle */}
+            {/* Cursor-following circle with arrow — covers the whole card */}
             <Box
                 sx={{
                     position: "absolute",
@@ -147,51 +156,113 @@ function BlogCard({ post, index }: { post: (typeof posts)[0]; index: number }) {
                 <NorthEastIcon sx={{ color: "#000", fontSize: "1.6rem" }} />
             </Box>
 
-            {/* Content */}
-            <Box sx={{ p: { xs: 2.5, md: 3 }, display: "flex", flexDirection: "column", gap: 1.5, flex: 1 }}>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1.2 }}>
-                    <Box
-                        sx={{
-                            width: 28,
-                            height: 28,
-                            borderRadius: "50%",
-                            bgcolor: post.authorColor,
-                        }}
-                    />
-                    <Typography sx={{ fontSize: "0.8rem", fontWeight: 600, color: "#111" }}>
-                        {post.author}
-                    </Typography>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 0.4, ml: 0.5 }}>
-                        <AccessTimeIcon sx={{ fontSize: "0.8rem", color: "#777" }} />
-                        <Typography sx={{ fontSize: "0.78rem", color: "#777" }}>{post.readTime}</Typography>
-                    </Box>
-                </Box>
-
-                <Typography
+            {/* Pills row */}
+            <Box sx={{ display: "flex", gap: 0.8, mt: 2, flexWrap: "wrap" }}>
+                {/* Author pill */}
+                <Box
                     sx={{
-                        fontWeight: 800,
-                        fontSize: { xs: "1rem", md: "1.05rem" },
-                        lineHeight: 1.4,
-                        letterSpacing: "-0.02em",
-                        color: "#111",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 0.9,
+                        bgcolor: "#efeae2",
+                        borderRadius: "999px",
+                        pl: 0.6,
+                        pr: 1.4,
+                        py: 0.5,
                     }}
                 >
-                    {post.title}
-                </Typography>
+                    <Box
+                        sx={{
+                            width: 22,
+                            height: 22,
+                            borderRadius: "50%",
+                            bgcolor: post.authorColor,
+                            flexShrink: 0,
+                        }}
+                    />
+                    <Typography
+                        sx={{
+                            fontSize: "0.82rem",
+                            fontWeight: 600,
+                            color: "#111",
+                            lineHeight: 1,
+                        }}
+                    >
+                        {post.author}
+                    </Typography>
+                </Box>
+
+                {/* Time pill */}
+                <Box
+                    sx={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 0.5,
+                        bgcolor: "#efeae2",
+                        borderRadius: "999px",
+                        px: 1.2,
+                        py: 0.5,
+                    }}
+                >
+                    <AccessTimeIcon sx={{ fontSize: "0.95rem", color: "#444" }} />
+                    <Typography
+                        sx={{
+                            fontSize: "0.82rem",
+                            color: "#222",
+                            fontWeight: 500,
+                            lineHeight: 1,
+                        }}
+                    >
+                        {post.readTime}
+                    </Typography>
+                </Box>
             </Box>
+
+            {/* Title */}
+            <Typography
+                sx={{
+                    fontWeight: 700,
+                    fontSize: { xs: "1.15rem", md: "1.35rem" },
+                    lineHeight: 1.25,
+                    letterSpacing: "-0.02em",
+                    color: "#111",
+                    mt: 2,
+                }}
+            >
+                {post.title}
+            </Typography>
         </Box>
     );
 }
 
 export default function BlogSection() {
+    const scrollerRef = useRef<HTMLDivElement>(null);
+    const [carouselProgress, setCarouselProgress] = useState(0);
+
+    useEffect(() => {
+        const el = scrollerRef.current;
+        if (!el) return;
+        const onScroll = () => {
+            const max = el.scrollWidth - el.clientWidth;
+            if (max <= 0) {
+                setCarouselProgress(0);
+                return;
+            }
+            setCarouselProgress(el.scrollLeft / max);
+        };
+        onScroll();
+        el.addEventListener("scroll", onScroll, { passive: true });
+        return () => el.removeEventListener("scroll", onScroll);
+    }, []);
+
     return (
-        <Box sx={{ pt: { xs: 8, md: 10 }, pb: { xs: 3, md: 4 }, px: { xs: 2, md: 6 } }}>
+        <Box sx={{ py: { xs: 4, md: 6 }, px: { xs: 2, md: 6 } }}>
             {/* Header */}
 
             <Box
                 sx={{
                     width: "100%",
-                    mb: { xs: 6, md: 10 },
+                    mb: { xs: 4, md: 10 },
                 }}
             >
                 <Box
@@ -247,9 +318,10 @@ export default function BlogSection() {
                         </Typography>
                     </Box>
 
-                    {/* RIGHT BUTTON */}
+                    {/* RIGHT BUTTON — desktop only */}
                       <Button
                             sx={{
+                                display: { xs: "none", md: "flex" },
                                 borderRadius: "999px",
                                 px: 4,
                                 py: 1.5,
@@ -262,7 +334,6 @@ export default function BlogSection() {
                                 position: "relative",
                                 overflow: "hidden",
 
-                                display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
                                 lineHeight: 1,
@@ -326,9 +397,10 @@ export default function BlogSection() {
                         </Button>
                 </Box>
 
-                {/* ✅ HORIZONTAL LINE */}
+                {/* HORIZONTAL LINE — desktop only */}
                 <Box
                     sx={{
+                        display: { xs: "none", md: "block" },
                         width: "100%",
                         height: "1px",
                         bgcolor: "#ddd",
@@ -337,20 +409,75 @@ export default function BlogSection() {
                 />
             </Box>
 
-            {/* Cards */}
+            {/* Cards — horizontal carousel on mobile, row on desktop */}
             <Box
+                ref={scrollerRef}
                 sx={{
                     display: "flex",
                     gap: { xs: 2, md: 2.5 },
-                    flexDirection: { xs: "column", md: "row" },
                     maxWidth: "1400px",
                     mx: "auto",
+                    overflowX: { xs: "auto", md: "visible" },
+                    scrollSnapType: { xs: "x mandatory", md: "none" },
+                    WebkitOverflowScrolling: "touch",
+                    px: { xs: 2, md: 0 },
+                    mx: { xs: -2, md: "auto" },
+                    "&::-webkit-scrollbar": { display: "none" },
+                    scrollbarWidth: "none",
                 }}
             >
-                {posts.map((post, i) => (
-                    <BlogCard key={post.title} post={post} index={i} />
+                {posts.map((post) => (
+                    <BlogCard key={post.title} post={post} />
                 ))}
             </Box>
+
+            {/* Mobile-only progress bar */}
+            <Box
+                sx={{
+                    display: { xs: "block", md: "none" },
+                    position: "relative",
+                    width: "70%",
+                    mx: "auto",
+                    mt: 3,
+                    height: 3,
+                    bgcolor: "#e2e2e2",
+                    borderRadius: 2,
+                }}
+            >
+                <Box
+                    sx={{
+                        position: "absolute",
+                        top: 0,
+                        height: "100%",
+                        width: `${100 / posts.length}%`,
+                        left: `${carouselProgress * (100 - 100 / posts.length)}%`,
+                        bgcolor: "#111",
+                        borderRadius: 2,
+                        transition: "left 0.05s linear",
+                    }}
+                />
+            </Box>
+
+            {/* Mobile-only "Explore More Thoughts" full-width button */}
+            <Button
+                fullWidth
+                sx={{
+                    display: { xs: "flex", md: "none" },
+                    mt: 3,
+                    borderRadius: "999px",
+                    py: 2,
+                    background: "#fff",
+                    color: "#111",
+                    fontWeight: 600,
+                    fontSize: "1rem",
+                    textTransform: "none",
+                    boxShadow: "none",
+                    border: "1px solid #ddd",
+                    "&:hover": { background: "#f5f5f5" },
+                }}
+            >
+                Explore More Thoughts ↗
+            </Button>
         </Box>
     );
 }

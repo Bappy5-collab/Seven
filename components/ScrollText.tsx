@@ -21,6 +21,10 @@ export default function ScrollText() {
       // leftward, exit at the left edge.
       const sw = heading.scrollWidth;
       const vw = window.innerWidth;
+      // marquee: heading starts fully off-screen to the right (translateX =
+      // viewportWidth) and ends fully off-screen to the left (translateX =
+      // -scrollWidth). letters appear at the right edge as the heading shifts
+      // leftward, exit at the left edge.
       setStartX(vw);
       setSpan(sw + vw);
     };
@@ -49,7 +53,7 @@ export default function ScrollText() {
   const sw = measured ? span - startX : 0;
 
   return (
-    <Box ref={containerRef} sx={{ height: "300vh" }}>
+    <Box ref={containerRef} sx={{ display: { xs: "none", md: "block" }, height: "300vh" }}>
       <Box
         sx={{
           position: "sticky",
