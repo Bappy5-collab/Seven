@@ -4,9 +4,9 @@ import Image from "next/image";
 import { Box, Typography } from "@mui/material";
 
 const bannerImages = [
-  "/banner/Screenshot 2026-05-04 173305.png",
-  "/banner/Screenshot 2026-05-04 173321.png",
-  "/banner/Screenshot 2026-05-04 173347.png",
+  "/banner/banner-1.png",
+  "/banner/banner-2.png",
+  "/banner/banner-3.png",
 ];
 
 const awardLogos = [
