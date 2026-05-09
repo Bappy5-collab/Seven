@@ -1,5 +1,5 @@
 "use client";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Typography, useMediaQuery, useTheme } from "@mui/material";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
@@ -16,47 +16,63 @@ const projects = [
     { name: "PrettyLittleThing", date: "", img: "/FeaturesWork/5.png" },
 ];
 
+const STEP_VH = 35;
+
 export default function FeaturedWork() {
     const [activeIndex, setActiveIndex] = useState(0);
-    // wheel listener is on the whole section
-    const sectionRef = useRef<HTMLDivElement>(null);
-    const activeIdxRef = useRef(0);
-    const lockedRef = useRef(false);
+    const [smoothProgress, setSmoothProgress] = useState(0);
+    const targetProgress = useRef(0);
+    const currentProgress = useRef(0);
+    const outerRef = useRef<HTMLDivElement>(null);
     const touchStartY = useRef(0);
 
     useEffect(() => {
-        activeIdxRef.current = activeIndex;
-    }, [activeIndex]);
-
-    useEffect(() => {
-        const el = sectionRef.current;
+        const el = outerRef.current;
         if (!el) return;
 
-        const onWheel = (e: WheelEvent) => {
-            const current = activeIdxRef.current;
-            const goingDown = e.deltaY > 0;
-            const canGoDown = current < projects.length - 1;
-            const canGoUp = current > 0;
+        let raf = 0;
+        let running = true;
 
-            if ((goingDown && canGoDown) || (!goingDown && canGoUp)) {
-                e.preventDefault();
-                if (lockedRef.current) return;
-                lockedRef.current = true;
-
-                setActiveIndex((prev) =>
-                    goingDown
-                        ? Math.min(projects.length - 1, prev + 1)
-                        : Math.max(0, prev - 1)
-                );
-
-                setTimeout(() => {
-                    lockedRef.current = false;
-                }, 1800);
-            }
+        const readScroll = () => {
+            const rect = el.getBoundingClientRect();
+            const vh = window.innerHeight;
+            const total = el.offsetHeight - vh;
+            const scrolled = Math.min(total, Math.max(0, -rect.top));
+            targetProgress.current = total > 0 ? scrolled / total : 0;
         };
 
-        el.addEventListener("wheel", onWheel, { passive: false });
-        return () => el.removeEventListener("wheel", onWheel);
+        const tick = () => {
+            if (!running) return;
+            // lerp current toward target — extra smoothing layer on top of Lenis
+            const t = targetProgress.current;
+            const c = currentProgress.current;
+            const next = c + (t - c) * 0.12;
+            currentProgress.current = Math.abs(next - t) < 0.0001 ? t : next;
+            setSmoothProgress(currentProgress.current);
+
+            const idx = Math.min(
+                projects.length - 1,
+                Math.max(0, Math.round(currentProgress.current * (projects.length - 1)))
+            );
+            setActiveIndex(idx);
+
+            raf = requestAnimationFrame(tick);
+        };
+
+        readScroll();
+        currentProgress.current = targetProgress.current;
+        raf = requestAnimationFrame(tick);
+
+        const onScroll = () => readScroll();
+
+        window.addEventListener("scroll", onScroll, { passive: true });
+        window.addEventListener("resize", readScroll);
+        return () => {
+            running = false;
+            window.removeEventListener("scroll", onScroll);
+            window.removeEventListener("resize", readScroll);
+            if (raf) cancelAnimationFrame(raf);
+        };
     }, []);
 
     const onTouchStart = (e: React.TouchEvent) => {
@@ -66,267 +82,268 @@ export default function FeaturedWork() {
     const onTouchEnd = (e: React.TouchEvent) => {
         const delta = touchStartY.current - e.changedTouches[0].clientY;
         if (Math.abs(delta) < 40) return;
-        setActiveIndex((prev) =>
-            delta > 0
-                ? Math.min(projects.length - 1, prev + 1)
-                : Math.max(0, prev - 1)
-        );
     };
+
+    const theme = useTheme();
+    const isLg = useMediaQuery(theme.breakpoints.up("lg"));
+    const rowHeight = isLg ? 78 : 68;
+
+    const progressIndex = smoothProgress * (projects.length - 1);
+    const imageOffset = progressIndex;
 
     return (
         <Box>
             <Box
-                ref={sectionRef}
-                onTouchStart={onTouchStart}
-                onTouchEnd={onTouchEnd}
+                ref={outerRef}
                 sx={{
-                    height: "100vh",
-                    background: "#0a0a0a",
-                    overflow: "hidden",
-                    display: "flex",
-                    px: { xs: 2, sm: 3, md: 6, lg: 8 },
-                    m: { xs: 1, md: 2 }, // margin
-                    borderRadius: "16px", // or 2 if using theme spacing
-
-                    cursor: "ns-resize",
+                    position: "relative",
+                    height: `${projects.length * STEP_VH + 100}vh`,
                 }}
             >
-                {/* ── LEFT PANEL ── */}
                 <Box
+                    onTouchStart={onTouchStart}
+                    onTouchEnd={onTouchEnd}
                     sx={{
-                        display: { xs: "none", md: "flex" },
-                        flexDirection: "column",
-                        width: { md: "43%", lg: "40%" },
-                        flexShrink: 0,
-                        height: "100%",
-                        pt: 8,
-                        pr: { md: 4, lg: 6 },
+                        position: "sticky",
+                        top: 0,
+                        height: "100vh",
+                        background: "#0a0a0a",
                         overflow: "hidden",
+                        display: "flex",
+                        px: { xs: 2, sm: 3, md: 6, lg: 8 },
+                        m: { xs: 1, md: 2 },
+                        borderRadius: "16px",
                     }}
                 >
-                    <Typography
+                    {/* ── LEFT PANEL ── */}
+                    <Box
                         sx={{
-                            color: "white",
-                            fontSize: "1.3rem",
-                            fontWeight: 600,
-                            letterSpacing: "0.07em",
-                            mb: 5,
+                            display: { xs: "none", md: "flex" },
+                            flexDirection: "column",
+                            width: { md: "43%", lg: "40%" },
+                            flexShrink: 0,
+                            height: "100%",
+                            pt: 8,
+                            pr: { md: 4, lg: 6 },
+                            overflow: "hidden",
                         }}
                     >
-                        Featured Work
-                    </Typography>
+                        <Typography
+                            sx={{
+                                color: "white",
+                                fontSize: "1.3rem",
+                                fontWeight: 600,
+                                letterSpacing: "0.07em",
+                                mb: 5,
+                            }}
+                        >
+                            Featured Work
+                        </Typography>
 
-                    <Box sx={{ overflow: "hidden", flex: 1 }}>
-                        {projects.map((p, i) => {
-                            const diff = i - activeIndex;
-                            const isActive = diff === 0;
-                            const isAbove = diff < 0;
-                            const distBelow = Math.max(0, diff);
+                        <Box
+                            sx={{
+                                position: "relative",
+                                flex: 1,
+                                overflow: "hidden",
+                                // soft fade mask top + bottom so items "enter" / "exit"
+                                maskImage:
+                                    "linear-gradient(to bottom, transparent 0%, #000 18%, #000 70%, transparent 100%)",
+                                WebkitMaskImage:
+                                    "linear-gradient(to bottom, transparent 0%, #000 18%, #000 70%, transparent 100%)",
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    position: "absolute",
+                                    top: 0,
+                                    left: 0,
+                                    right: 0,
+                                    transform: `translate3d(0, calc(28vh - ${progressIndex * rowHeight}px), 0)`,
+                                    willChange: "transform",
+                                }}
+                            >
+                                {projects.map((p, i) => {
+                                    const distance = Math.abs(i - progressIndex);
+                                    const opacity = Math.max(0, 1 - distance * 0.42);
 
-                            return (
+                                    return (
+                                        <Box
+                                            key={i}
+                                            sx={{
+                                                height: `${rowHeight}px`,
+                                                display: "flex",
+                                                alignItems: "flex-start",
+                                                opacity,
+                                            }}
+                                        >
+                                            <Typography
+                                                sx={{
+                                                    color: "#fff",
+                                                    fontWeight: 700,
+                                                    lineHeight: 1,
+                                                    letterSpacing: "-0.03em",
+                                                    fontSize: { md: "3rem", lg: "3.8rem", xl: "4.4rem" },
+                                                    minWidth: 0,
+                                                    whiteSpace: "nowrap",
+                                                    overflow: "hidden",
+                                                    textOverflow: "ellipsis",
+                                                }}
+                                            >
+                                                {p.name}
+                                            </Typography>
+
+                                            {p.date && (
+                                                <Typography
+                                                    component="span"
+                                                    sx={{
+                                                        color: "rgba(255,255,255,0.55)",
+                                                        fontWeight: 400,
+                                                        flexShrink: 0,
+                                                        whiteSpace: "nowrap",
+                                                        fontSize: "0.78rem",
+                                                        lineHeight: 1,
+                                                    }}
+                                                >
+                                                    [{p.date}]
+                                                </Typography>
+                                            )}
+                                        </Box>
+                                    );
+                                })}
+                            </Box>
+                        </Box>
+                    </Box>
+
+                    {/* ── RIGHT PANEL: image carousel ── */}
+                    <Box
+                        sx={{
+                            flex: 1,
+                            height: "100%",
+                            overflow: "hidden",
+                            position: "relative",
+                        }}
+                    >
+                        {/* Mobile label */}
+                        <Box
+                            sx={{
+                                display: { xs: "flex", md: "none" },
+                                position: "absolute",
+                                top: 20,
+                                left: 0,
+                                zIndex: 2,
+                                pointerEvents: "none",
+                            }}
+                        >
+                            <Typography
+                                sx={{
+                                    color: "rgba(255,255,255,0.35)",
+                                    fontSize: "0.72rem",
+                                    fontWeight: 500,
+                                    letterSpacing: "0.07em",
+                                    textTransform: "uppercase",
+                                }}
+                            >
+                                Featured Work
+                            </Typography>
+                        </Box>
+
+                        {/* Progress dots */}
+                        <Box
+                            sx={{
+                                position: "absolute",
+                                right: -18,
+                                top: "50%",
+                                transform: "translateY(-50%)",
+                                display: { xs: "none", md: "flex" },
+                                flexDirection: "column",
+                                gap: "6px",
+                                zIndex: 3,
+                                pointerEvents: "none",
+                            }}
+                        >
+                            {projects.map((_, i) => (
                                 <Box
                                     key={i}
                                     sx={{
-                                        maxHeight: isAbove
-                                            ? "0px"
-                                            : isActive
-                                                ? "320px"
-                                                : `${Math.max(22, 90 - distBelow * 16)}px`,
-                                        opacity: isAbove
-                                            ? 0
-                                            : isActive
-                                                ? 1
-                                                : Math.max(0.04, 0.5 - distBelow * 0.13),
+                                        width: 4,
+                                        height: i === activeIndex ? 16 : 4,
+                                        borderRadius: "2px",
+                                        background:
+                                            i === activeIndex ? "#fff" : "rgba(255,255,255,0.3)",
+                                        transition: "all 0.4s ease",
+                                    }}
+                                />
+                            ))}
+                        </Box>
+
+                        {/* Image stack — translates continuously with scroll progress */}
+                        <Box
+                            sx={{
+                                pt: "20px",
+                                transform: `translate3d(0, calc(-${imageOffset} * (84vh + 14px)), 0)`,
+                                willChange: "transform",
+                            }}
+                        >
+                            {projects.map((p, i) => (
+                                <Box
+                                    key={i}
+                                    sx={{
+                                        height: "84vh",
+                                        mb: "14px",
+                                        borderRadius: { xs: "10px", md: "14px" },
                                         overflow: "hidden",
-                                        transition:
-                                            "max-height 4s cubic-bezier(0.16,1,0.3,1)," +
-                                            "opacity 4s cubic-bezier(0.16,1,0.3,1)",
+                                        position: "relative",
+                                        flexShrink: 0,
                                     }}
                                 >
+                                    <Image
+                                        src={p.img}
+                                        alt={p.name}
+                                        fill
+                                        style={{ objectFit: "cover" }}
+                                        sizes="(max-width: 768px) 100vw, 60vw"
+                                    />
+
+                                    {/* Mobile overlay */}
                                     <Box
                                         sx={{
-                                            display: "flex",
-                                            alignItems: "baseline",
-                                            flexWrap: "wrap",
-                                            gap: 1,
-                                            pb: isActive ? 2 : 0.35,
+                                            display: { xs: "flex", md: "none" },
+                                            position: "absolute",
+                                            bottom: 20,
+                                            left: 16,
+                                            flexDirection: "column",
+                                            gap: 0.3,
+                                            opacity: i === activeIndex ? 1 : 0,
+                                            transition: "opacity 0.5s ease",
+                                            pointerEvents: "none",
                                         }}
                                     >
                                         <Typography
                                             sx={{
                                                 color: "#fff",
                                                 fontWeight: 700,
-                                                lineHeight: 1.04,
-                                                letterSpacing: isActive ? "-0.035em" : "-0.01em",
-                                                fontSize: isActive
-                                                    ? { md: "3.6rem", lg: "4.6rem", xl: "5.2rem" }
-                                                    : distBelow === 1
-                                                        ? { md: "1.75rem", lg: "2.2rem" }
-                                                        : { md: "0.9rem", lg: "1.1rem" },
-                                                transition:
-                                                    "font-size 4s cubic-bezier(0.16,1,0.3,1)," +
-                                                    "letter-spacing 4s ease",
-                                                whiteSpace: distBelow > 0 ? "nowrap" : "normal",
-                                                overflow: "hidden",
-                                                textOverflow: distBelow > 0 ? "ellipsis" : "clip",
-                                                maxWidth: "100%",
+                                                fontSize: "1.6rem",
+                                                lineHeight: 1.1,
+                                                letterSpacing: "-0.02em",
                                             }}
                                         >
                                             {p.name}
                                         </Typography>
-
                                         {p.date && (
                                             <Typography
-                                                component="span"
-                                                sx={{
-                                                    color: "rgba(255,255,255,0.45)",
-                                                    fontWeight: 400,
-                                                    flexShrink: 0,
-                                                    fontSize: isActive ? "0.85rem" : "0.58rem",
-                                                    transition:
-                                                        "font-size 4s cubic-bezier(0.16,1,0.3,1)",
-                                                }}
+                                                sx={{ color: "rgba(255,255,255,0.6)", fontSize: "0.72rem" }}
                                             >
                                                 [{p.date}]
                                             </Typography>
                                         )}
                                     </Box>
                                 </Box>
-                            );
-                        })}
+                            ))}
+                        </Box>
                     </Box>
                 </Box>
-
-                {/* ── RIGHT PANEL: image carousel ── */}
-                <Box
-                    sx={{
-                        flex: 1,
-                        height: "100%",
-                        overflow: "hidden",
-                        position: "relative",
-                    }}
-                >
-                    {/* Mobile label */}
-                    <Box
-                        sx={{
-                            display: { xs: "flex", md: "none" },
-                            position: "absolute",
-                            top: 20,
-                            left: 0,
-                            zIndex: 2,
-                            pointerEvents: "none",
-                        }}
-                    >
-                        <Typography
-                            sx={{
-                                color: "rgba(255,255,255,0.35)",
-                                fontSize: "0.72rem",
-                                fontWeight: 500,
-                                letterSpacing: "0.07em",
-                                textTransform: "uppercase",
-                            }}
-                        >
-                            Featured Work
-                        </Typography>
-                    </Box>
-
-                    {/* Progress dots */}
-                    <Box
-                        sx={{
-                            position: "absolute",
-                            right: -18,
-                            top: "50%",
-                            transform: "translateY(-50%)",
-                            display: { xs: "none", md: "flex" },
-                            flexDirection: "column",
-                            gap: "6px",
-                            zIndex: 3,
-                            pointerEvents: "none",
-                        }}
-                    >
-                        {projects.map((_, i) => (
-                            <Box
-                                key={i}
-                                sx={{
-                                    width: 4,
-                                    height: i === activeIndex ? 16 : 4,
-                                    borderRadius: "2px",
-                                    background:
-                                        i === activeIndex ? "#fff" : "rgba(255,255,255,0.3)",
-                                    transition: "all 0.4s ease",
-                                }}
-                            />
-                        ))}
-                    </Box>
-
-                    {/* Image stack */}
-                    <Box
-                        sx={{
-                            pt: "20px",
-                            transform: `translateY(calc(-${activeIndex} * (84vh + 14px)))`,
-                            transition: "transform 1.8s cubic-bezier(0.16,1,0.3,1)",
-                            willChange: "transform",
-                        }}
-                    >
-                        {projects.map((p, i) => (
-                            <Box
-                                key={i}
-                                sx={{
-                                    height: "84vh",
-                                    mb: "14px",
-                                    borderRadius: { xs: "10px", md: "14px" },
-                                    overflow: "hidden",
-                                    position: "relative",
-                                    flexShrink: 0,
-                                }}
-                            >
-                                <Image
-                                    src={p.img}
-                                    alt={p.name}
-                                    fill
-                                    style={{ objectFit: "cover" }}
-                                    sizes="(max-width: 768px) 100vw, 60vw"
-                                />
-
-                                {/* Mobile overlay */}
-                                <Box
-                                    sx={{
-                                        display: { xs: "flex", md: "none" },
-                                        position: "absolute",
-                                        bottom: 20,
-                                        left: 16,
-                                        flexDirection: "column",
-                                        gap: 0.3,
-                                        opacity: i === activeIndex ? 1 : 0,
-                                        transition: "opacity 0.5s ease",
-                                        pointerEvents: "none",
-                                    }}
-                                >
-                                    <Typography
-                                        sx={{
-                                            color: "#fff",
-                                            fontWeight: 700,
-                                            fontSize: "1.6rem",
-                                            lineHeight: 1.1,
-                                            letterSpacing: "-0.02em",
-                                        }}
-                                    >
-                                        {p.name}
-                                    </Typography>
-                                    {p.date && (
-                                        <Typography
-                                            sx={{ color: "rgba(255,255,255,0.6)", fontSize: "0.72rem" }}
-                                        >
-                                            [{p.date}]
-                                        </Typography>
-                                    )}
-                                </Box>
-                            </Box>
-                        ))}
-                    </Box>
-                </Box>
-
             </Box>
+
             <Box sx={{ display: "flex", justifyContent: "center", mt: 5 }}>
                 <Button
                     sx={{

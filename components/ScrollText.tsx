@@ -45,17 +45,8 @@ export default function ScrollText() {
   const chars = Array.from(PHRASE);
   const n = chars.length;
 
-  // Calibrate per-letter slice timing so each letter's drop-in starts when it
-  // crosses the right edge of the viewport during the marquee. The marquee's
-  // entry phase covers progress ∈ [0, scrollWidth / span]; after that all
-  // letters are visible and the heading continues exiting to the left.
   const measured = span > 0;
   const sw = measured ? span - startX : 0;
-  const entryEnd = measured ? sw / span : 1;
-  const STAGGER = n > 1 ? entryEnd / (n - 1) : 1;
-  // each letter animates for a window slightly longer than one stagger step
-  // so adjacent letters overlap → continuous cascade.
-  const PER_LETTER = STAGGER * 1.6 || 0.06;
 
   return (
     <Box ref={containerRef} sx={{ height: "300vh" }}>
@@ -94,18 +85,24 @@ export default function ScrollText() {
           }}
         >
           {chars.map((ch, i) => {
-            const start = i * STAGGER;
-            const end = start + PER_LETTER;
-            const local = Math.min(
-              Math.max((progress - start) / (end - start), 0),
-              1
-            );
-            // ease-out cubic
-            const eased = 1 - Math.pow(1 - local, 3);
-            // every letter starts individually at translate(0, -60%) rotate(10deg)
-            // and animates out of that state as its slice arrives.
-            const ty = (1 - eased) * -60; // %
-            const rot = (1 - eased) * 10; // deg
+            // Position-based curve: letter curves while traveling from the
+            // right edge of the viewport to the centre. After the centre the
+            // letter is fully settled and exits flat.
+            // Approximate letter's relative x in heading as (i / n) * sw.
+            const charPos = n > 0 && measured ? (i / n) * sw : 0;
+            // absolute x of letter at current progress = startX - span*progress + charPos
+            // viewport fraction = absX / startX  (1 = right edge, 0 = left edge)
+            const absX = measured ? startX - span * progress + charPos : startX;
+            const fraction = startX > 0 ? absX / startX : 1;
+
+            let t = 0;
+            if (fraction >= 1) t = 0;
+            else if (fraction <= 0.5) t = 1;
+            else t = (1 - fraction) / 0.5;
+
+            const eased = 1 - Math.pow(1 - t, 3); // ease-out cubic
+            const ty = (1 - eased) * -60;
+            const rot = (1 - eased) * 10;
 
             if (ch === " ") {
               return (
