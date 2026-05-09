@@ -416,7 +416,6 @@ export default function BlogSection() {
                     display: "flex",
                     gap: { xs: 2, md: 2.5 },
                     maxWidth: "1400px",
-                    mx: "auto",
                     overflowX: { xs: "auto", md: "visible" },
                     scrollSnapType: { xs: "x mandatory", md: "none" },
                     WebkitOverflowScrolling: "touch",
