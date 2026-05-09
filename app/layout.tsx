@@ -8,8 +8,8 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const fraunces = Fraunces({
   subsets: ["latin"],
-  weight: ["300", "400"],
-  style: ["italic"],
+  weight: ["300", "400", "700", "800", "900"],
+  style: ["normal", "italic"],
   variable: "--font-fraunces",
   display: "swap",
 });

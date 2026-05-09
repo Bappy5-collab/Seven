@@ -210,28 +210,53 @@ export default function Navbar() {
         <Box sx={{ flex: 1, display: "flex", alignItems: "center" }}>
           <Typography
             sx={{
-              fontFamily: "var(--font-fraunces), serif",
-              fontWeight: 300,
-              fontStyle: "italic",
-              fontSize: { xs: "1.4rem", md: "1.55rem" },
+              fontFamily: "Inter, sans-serif",
+              fontWeight: 700,
+              fontStyle: "normal",
+              fontSize: { xs: "1.5rem", md: "1.7rem" },
               color: scrolled ? "#111" : "#fff",
               transition: "color 0.3s ease",
               cursor: "pointer",
-              letterSpacing: "0.02em",
+              letterSpacing: "-0.04em",
               lineHeight: 1,
               userSelect: "none",
+              display: "inline-flex",
+              alignItems: "flex-start",
             }}
           >
-            Rise at Seven
+            <span>Rise at Seve</span>
             <Box
-              component="sup"
+              component="span"
               sx={{
-                fontSize: "0.38rem",
-                verticalAlign: "super",
-                fontStyle: "normal",
-                fontWeight: 400,
-                fontFamily: "var(--font-fraunces), serif",
-                ml: "1px",
+                position: "relative",
+                display: "inline-block",
+                pr: "0.55em",
+              }}
+            >
+              N
+              <Box
+                component="span"
+                sx={{
+                  position: "absolute",
+                  top: "0.02em",
+                  left: "0.78em",
+                  width: "0.55em",
+                  height: "0.12em",
+                  bgcolor: "currentColor",
+                  transform: "rotate(-38deg)",
+                  transformOrigin: "left center",
+                  borderRadius: "0.06em",
+                }}
+              />
+            </Box>
+            <Box
+              component="span"
+              sx={{
+                fontSize: "0.32em",
+                fontWeight: 500,
+                ml: "0.15em",
+                mt: "0.15em",
+                lineHeight: 1,
               }}
             >
               ®
@@ -609,9 +634,38 @@ export default function Navbar() {
       >
         <Box sx={{ p: 3 }}>
           <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 4 }}>
-            <Typography sx={{ color: "#fff", fontFamily: "var(--font-fraunces), serif", fontWeight: 300, fontStyle: "italic", fontSize: "1.5rem" }}>
-              Rise at Seven
-              <sup style={{ fontSize: "0.45rem", fontStyle: "normal" }}>®</sup>
+            <Typography
+              sx={{
+                color: "#fff",
+                fontFamily: "Inter, sans-serif",
+                fontWeight: 700,
+                fontStyle: "normal",
+                fontSize: "1.6rem",
+                letterSpacing: "-0.04em",
+                lineHeight: 1,
+                display: "inline-flex",
+                alignItems: "flex-start",
+              }}
+            >
+              <span>Rise at Seve</span>
+              <Box component="span" sx={{ position: "relative", display: "inline-block", pr: "0.55em" }}>
+                N
+                <Box
+                  component="span"
+                  sx={{
+                    position: "absolute",
+                    top: "0.02em",
+                    left: "0.78em",
+                    width: "0.55em",
+                    height: "0.12em",
+                    bgcolor: "currentColor",
+                    transform: "rotate(-38deg)",
+                    transformOrigin: "left center",
+                    borderRadius: "0.06em",
+                  }}
+                />
+              </Box>
+              <Box component="span" sx={{ fontSize: "0.32em", fontWeight: 500, ml: "0.15em", mt: "0.15em", lineHeight: 1 }}>®</Box>
             </Typography>
             <IconButton onClick={() => setDrawerOpen(false)} sx={{ color: "#fff" }}>
               <CloseIcon />
