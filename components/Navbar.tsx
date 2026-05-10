@@ -370,7 +370,7 @@ export default function Navbar() {
                       flex: activeDropdown.title ? 1 : "0 1 auto",
                       display: "flex",
                       flexDirection: "column",
-                      justifyContent: activeDropdown.title ? "flex-start" : "center",
+                      justifyContent: "center",
                       gap: 2,
                       py: activeDropdown.title ? 0 : 1,
                       px: 1,

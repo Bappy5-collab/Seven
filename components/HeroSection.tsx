@@ -4,9 +4,9 @@ import Image from "next/image";
 import { Box, Typography } from "@mui/material";
 
 const bannerImages = [
-  "/banner/banner-1.png",
-  "/banner/banner-2.png",
-  "/banner/banner-3.png",
+  "/Banner/banner-1.png",
+  "/Banner/banner-2.png",
+  "/Banner/banner-3.png",
 ];
 
 const awardLogos = [
@@ -124,14 +124,23 @@ export default function HeroSection() {
             Content Marketing Agency
           </Typography>
 
-          <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 1, md: 1.5 } }}>
-            <Typography sx={{ color: "rgba(255,255,255,0.5)", fontSize: "1.1rem" }}>❧</Typography>
+          <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 0.3, md: 0.5 } }}>
+            <Box
+              component="img"
+              src="/navbar/plant1.png"
+              alt=""
+              sx={{
+                height: { xs: "36px", md: "44px" },
+                width: "auto",
+                opacity: 0.9,
+                filter: "brightness(0) invert(1)",
+              }}
+            />
             {awardLogos.map((a, i) => (
               <Box
                 key={i}
                 sx={{
-                  border: "1px solid rgba(255,255,255,0.45)",
-                  px: { xs: 1, md: 1.5 },
+                  px: { xs: 0.4, md: 0.6 },
                   py: { xs: 0.5, md: 0.8 },
                   display: "flex",
                   alignItems: "center",
@@ -157,7 +166,17 @@ export default function HeroSection() {
                 </Typography>
               </Box>
             ))}
-            <Typography sx={{ color: "rgba(255,255,255,0.5)", fontSize: "1.1rem" }}>❧</Typography>
+            <Box
+              component="img"
+              src="/navbar/plant.png"
+              alt=""
+              sx={{
+                height: { xs: "36px", md: "44px" },
+                width: "auto",
+                opacity: 0.9,
+                filter: "brightness(0) invert(1)",
+              }}
+            />
           </Box>
         </Box>
 

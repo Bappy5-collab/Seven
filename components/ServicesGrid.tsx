@@ -211,9 +211,48 @@ const ServicesSection = () => {
           mb: 6,
         }}
       >
-        <Typography sx={{ fontSize: "72px", fontWeight: 600 }}>
-          Our Services
-        </Typography>
+       <Box
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            flexWrap: "wrap",
+                            gap: 2,
+                        }}
+                    >
+                        <Typography
+                            sx={{
+                                fontSize: { xs: "40px", md: "80px" },
+                                fontWeight: 700,
+                                color: "#111",
+                                lineHeight: 1,
+                            }}
+                        >
+                            Our
+                        </Typography>
+
+                        <Box
+                            component="img"
+                            src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e"
+                            alt="preview"
+                            sx={{
+                                width: { xs: 50, md: 80 },
+                                height: { xs: 50, md: 80 },
+                                borderRadius: "20px",
+                                objectFit: "cover",
+                            }}
+                        />
+
+                        <Typography
+                            sx={{
+                                fontSize: { xs: "40px", md: "80px" },
+                                fontWeight: 700,
+                                color: "#111",
+                                lineHeight: 1,
+                            }}
+                        >
+                            Services
+                        </Typography>
+                    </Box>
 
         <Button
           sx={{

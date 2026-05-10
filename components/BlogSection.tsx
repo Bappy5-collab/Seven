@@ -90,7 +90,7 @@ function BlogCard({ post }: { post: Post }) {
                         bottom: 0,
                         left: 0,
                         width: "100%",
-                        height: "100%",
+                         height: "100%",
                         backdropFilter: "blur(10px)",
                         WebkitBackdropFilter: "blur(10px)",
                         background: "rgba(0,0,0,0.2)",

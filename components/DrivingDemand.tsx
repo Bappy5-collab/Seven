@@ -3,11 +3,12 @@ import { Box, Typography, Button, Stack } from "@mui/material";
 import Image from "next/image";
 
 const logos = [
-    { src: "/logos/kroger.svg", w: 90, h: 34 },
-    { src: "/logos/hubspot.svg", w: 100, h: 34 },
-    { src: "/logos/xbox.svg", w: 100, h: 34 },
-    { src: "/logos/sixt.svg", w: 80, h: 34 },
-    { src: "/logos/revolution.svg", w: 130, h: 34 },
+    { src: "/agency/emirates-logo-png_seeklogo-478189.png", w: 110, h: 40 },
+    { src: "/agency/JD_Sports-Logo.wine.png", w: 120, h: 40 },
+    { src: "/agency/SharkNinja_logo.png", w: 120, h: 40 },
+    { src: "/agency/images.png", w: 100, h: 40 },
+    { src: "/agency/images (1).png", w: 100, h: 40 },
+    { src: "/agency/s-l1200.jpg", w: 110, h: 40 },
 ];
 
 export default function DrivingDemand() {
@@ -38,7 +39,17 @@ export default function DrivingDemand() {
                 </Typography>
 
                 {/* Marquee track */}
-                <Box sx={{ overflow: "hidden", flex: 1 }}>
+                <Box
+                    sx={{
+                        overflow: "hidden",
+                        flex: 1,
+                        position: "relative",
+                        maskImage:
+                            "linear-gradient(to right, transparent 0, #000 160px, #000 calc(100% - 160px), transparent 100%)",
+                        WebkitMaskImage:
+                            "linear-gradient(to right, transparent 0, #000 160px, #000 calc(100% - 160px), transparent 100%)",
+                    }}
+                >
                     <Box
                         sx={{
                             display: "flex",
@@ -56,7 +67,6 @@ export default function DrivingDemand() {
                             <Box
                                 key={i}
                                 sx={{
-                                    opacity: 0.65,
                                     flexShrink: 0,
                                     display: "flex",
                                     alignItems: "center",
