@@ -5,7 +5,6 @@ import {
   Box,
   Button,
   IconButton,
-  Drawer,
   useMediaQuery,
   useTheme,
   Typography,
@@ -142,6 +141,16 @@ export default function Navbar() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // lock body scroll while the mobile menu is open (matches the old Drawer)
+  useEffect(() => {
+    if (!drawerOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [drawerOpen]);
 
   const scrolled = !atTop;
 
@@ -638,25 +647,42 @@ export default function Navbar() {
         </Box>
       </Box>
 
-      {/* Mobile Drawer */}
-      <Drawer
-        anchor="top"
-        open={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
-        slotProps={{
-          paper: {
-            sx: {
-              width: "auto",
-              m: "12px",
-              borderRadius: "24px",
-              bgcolor: "rgba(20,20,20,0.78)",
-              backdropFilter: "blur(22px) saturate(160%)",
-              WebkitBackdropFilter: "blur(22px) saturate(160%)",
-              boxShadow: "0 18px 60px rgba(0,0,0,0.45)",
-              overflow: "hidden",
-              maxHeight: "calc(100vh - 24px)",
-            },
-          },
+      {/* Mobile menu — fades / scales into place (no edge slide). Mobile only;
+          desktop is untouched. */}
+      <Box
+        onClick={() => setDrawerOpen(false)}
+        sx={{
+          display: { xs: "block", md: "none" },
+          position: "fixed",
+          inset: 0,
+          zIndex: 1299,
+          bgcolor: "rgba(0,0,0,0.45)",
+          opacity: drawerOpen ? 1 : 0,
+          pointerEvents: drawerOpen ? "auto" : "none",
+          transition: "opacity 0.45s ease",
+        }}
+      />
+      <Box
+        sx={{
+          display: { xs: "block", md: "none" },
+          position: "fixed",
+          top: "12px",
+          left: "12px",
+          right: "12px",
+          zIndex: 1300,
+          borderRadius: "24px",
+          bgcolor: "rgba(20,20,20,0.78)",
+          backdropFilter: "blur(22px) saturate(160%)",
+          WebkitBackdropFilter: "blur(22px) saturate(160%)",
+          boxShadow: "0 18px 60px rgba(0,0,0,0.45)",
+          overflowX: "hidden",
+          overflowY: "auto",
+          maxHeight: "calc(100vh - 24px)",
+          transformOrigin: "top center",
+          opacity: drawerOpen ? 1 : 0,
+          transform: drawerOpen ? "scale(1)" : "scale(0.97)",
+          pointerEvents: drawerOpen ? "auto" : "none",
+          transition: "opacity 0.5s ease, transform 0.55s cubic-bezier(0.16,1,0.3,1)",
         }}
       >
         <Box sx={{ px: 3, pt: 2.5, pb: 3 }}>
@@ -825,7 +851,7 @@ export default function Navbar() {
             Get In Touch
           </Button>
         </Box>
-      </Drawer>
+      </Box>
     </>
   );
 }

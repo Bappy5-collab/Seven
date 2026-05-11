@@ -122,7 +122,7 @@ function ProjectImage({ project, isActive, selected }: { project: Project; isAct
             onMouseEnter={() => setCursor((c) => ({ ...c, visible: true }))}
             onMouseLeave={() => setCursor((c) => ({ ...c, visible: false }))}
             sx={{
-                height: "84vh",
+                height: { xs: "72vh", md: "84vh" },
                 mb: "14px",
                 borderRadius: { xs: "10px", md: "14px" },
                 overflow: "hidden",
@@ -209,7 +209,7 @@ function ProjectImage({ project, isActive, selected }: { project: Project; isAct
                 </Box>
             </Box>
 
-            {/* Mobile overlay (project name + date) */}
+            {/* Mobile overlay (date above the project name) */}
             <Box
                 sx={{
                     display: { xs: "flex", md: "none" },
@@ -224,6 +224,11 @@ function ProjectImage({ project, isActive, selected }: { project: Project; isAct
                     zIndex: 2,
                 }}
             >
+                {project.date && (
+                    <Typography sx={{ color: "rgba(255,255,255,0.6)", fontSize: "0.72rem" }}>
+                        [{project.date}]
+                    </Typography>
+                )}
                 <Typography
                     sx={{
                         color: "#fff",
@@ -235,11 +240,6 @@ function ProjectImage({ project, isActive, selected }: { project: Project; isAct
                 >
                     {project.name}
                 </Typography>
-                {project.date && (
-                    <Typography sx={{ color: "rgba(255,255,255,0.6)", fontSize: "0.72rem" }}>
-                        [{project.date}]
-                    </Typography>
-                )}
             </Box>
         </Box>
     );
@@ -555,11 +555,15 @@ export default function FeaturedWork() {
                             ))}
                         </Box>
 
-                        {/* Image stack — translates continuously with scroll progress */}
+                        {/* Image stack — translates continuously with scroll progress
+                            (step matches the per-screen image height + 14px gap). */}
                         <Box
                             sx={{
                                 pt: "20px",
-                                transform: `translate3d(0, calc(-${imageOffset} * (84vh + 14px)), 0)`,
+                                transform: {
+                                    xs: `translate3d(0, calc(-${imageOffset} * (72vh + 14px)), 0)`,
+                                    md: `translate3d(0, calc(-${imageOffset} * (84vh + 14px)), 0)`,
+                                },
                                 willChange: "transform",
                             }}
                         >
@@ -606,12 +610,24 @@ export default function FeaturedWork() {
                 </Box>
             </Box>
 
-            <Box sx={{ display: "flex", justifyContent: "center", mt: 5 }}>
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    mt: 5,
+                    width: "100%",
+                        mx: { xs: 2, md: 0 }, 
+                }}
+            >
                 <Button
                     sx={{
                         borderRadius: "999px",
                         px: 4,
                         py: 1.5,
+
+                        width: { xs: "100%", md: "auto" }, // mobile full width
+                        maxWidth: { xs: "100%", md: "fit-content" },
+
                         background: "#fff",
                         color: "#111",
                         fontWeight: 600,

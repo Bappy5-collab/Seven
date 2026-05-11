@@ -274,21 +274,24 @@ export default function BlogSection() {
                         gap: 2,
                     }}
                 >
-                    {/* LEFT SIDE */}
+                    {/* LEFT SIDE — on mobile this wraps to "What's [img]" / "New",
+                        sized like the "Our [img] Services" heading. */}
                     <Box
                         sx={{
                             display: "flex",
                             alignItems: "center",
                             flexWrap: "wrap",
-                            gap: 2,
+                            columnGap: { xs: 1.2, md: 2 },
+                            rowGap: { xs: 0.5, md: 0 },
                         }}
                     >
                         <Typography
                             sx={{
-                                fontSize: { xs: "40px", md: "80px" },
+                                fontSize: { xs: "3.6rem", md: "80px" },
                                 fontWeight: 700,
                                 color: "#111",
                                 lineHeight: 1,
+                                letterSpacing: { xs: "-0.03em", md: "normal" },
                             }}
                         >
                             What’s
@@ -299,19 +302,22 @@ export default function BlogSection() {
                             src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e"
                             alt="preview"
                             sx={{
-                                width: { xs: 50, md: 80 },
-                                height: { xs: 50, md: 80 },
-                                borderRadius: "20px",
+                                width: { xs: 56, md: 80 },
+                                height: { xs: 56, md: 80 },
+                                borderRadius: { xs: "12px", md: "20px" },
                                 objectFit: "cover",
+                                flexShrink: 0,
                             }}
                         />
 
                         <Typography
                             sx={{
-                                fontSize: { xs: "40px", md: "80px" },
+                                fontSize: { xs: "3.6rem", md: "80px" },
                                 fontWeight: 700,
                                 color: "#111",
                                 lineHeight: 1,
+                                letterSpacing: { xs: "-0.03em", md: "normal" },
+                                width: { xs: "100%", md: "auto" },
                             }}
                         >
                             New
@@ -428,13 +434,12 @@ export default function BlogSection() {
                 ))}
             </Box>
 
-            {/* Mobile-only progress bar */}
+            {/* Mobile-only progress bar — full width within the section padding */}
             <Box
                 sx={{
                     display: { xs: "block", md: "none" },
                     position: "relative",
-                    width: "70%",
-                    mx: "auto",
+                    width: "100%",
                     mt: 3,
                     height: 3,
                     bgcolor: "#e2e2e2",

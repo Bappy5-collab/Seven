@@ -110,8 +110,6 @@ export default function LegacySection() {
                     overflowX: "auto",
                     scrollSnapType: "x mandatory",
                     WebkitOverflowScrolling: "touch",
-                    mx: -3,
-                    px: 3,
                     pb: 1,
                     "&::-webkit-scrollbar": { display: "none" },
                     scrollbarWidth: "none",
@@ -121,7 +119,7 @@ export default function LegacySection() {
                     <Box
                         key={i}
                         sx={{
-                            flex: "0 0 88%",
+                            flex: "0 0 100%",
                             scrollSnapAlign: "center",
                             background: card.bg,
                             borderRadius: "20px",
@@ -147,7 +145,7 @@ export default function LegacySection() {
                                 src={card.img}
                                 alt={card.title}
                                 fill
-                                sizes="(max-width: 768px) 88vw, 0px"
+                                sizes="(max-width: 768px) 100vw, 0px"
                                 style={{ objectFit: "cover" }}
                             />
                         </Box>
@@ -182,12 +180,11 @@ export default function LegacySection() {
                 ))}
             </Box>
 
-            {/* Progress bar */}
+            {/* Progress bar — full width within the section padding */}
             <Box
                 sx={{
                     position: "relative",
-                    width: "60%",
-                    mx: "auto",
+                    width: "100%",
                     mt: 3,
                     height: 4,
                     bgcolor: "#e2e2e2",

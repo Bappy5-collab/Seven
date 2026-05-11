@@ -285,6 +285,8 @@ export default function HeroSection() {
             lineHeight: 1.6,
             fontWeight: 500,
             order: { xs: 2, md: 1 },
+
+            display: { xs: "none", md: "block" }, // mobile hide
           }}
         >
           Organic media planners creating, distributing & optimising

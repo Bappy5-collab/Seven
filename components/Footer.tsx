@@ -63,16 +63,17 @@ export default function Footer() {
           sx={{
             display: "grid",
             gridTemplateColumns: {
-              xs: "1fr",
+              xs: "1fr 1fr",
               sm: "1fr 1fr",
               md: "1.5fr 1fr 1fr 1fr",
             },
-            gap: { xs: 5, md: 6 },
+            columnGap: { xs: 3, md: 6 },
+            rowGap: { xs: 5, md: 6 },
             pb: { xs: 6, md: 10 },
           }}
         >
           {/* newsletter + socials */}
-          <Box>
+          <Box sx={{ gridColumn: { xs: "1 / -1", md: "auto" } }}>
             <Typography
               sx={{
                 fontWeight: 600,
@@ -214,68 +215,69 @@ export default function Footer() {
           </Box>
 
           {/* link columns */}
-        {linkColumns.map((col, idx) => (
-  <Box
-    key={idx}
-    sx={{
-      borderLeft: { md: "2px solid #1f1f1f" },
-      pl: { md: 4 },
-    }}
-  >
-    {col.map((link) => (
-      <Box
-        key={link}
-        component="a"
-        href="#"
-        sx={{
-          position: "relative",
-          display: "block",
-          overflow: "hidden",
-          height: "32px",
-          textDecoration: "none",
-          
+          {linkColumns.map((col, idx) => (
+            <Box
+              key={idx}
+              sx={{
+                gridColumn: idx === 2 ? { xs: "1 / -1", md: "auto" } : "auto",
+                borderLeft: "2px solid #1f1f1f",
+                pl: { xs: 2.5, md: 4 },
+              }}
+            >
+              {col.map((link) => (
+                <Box
+                  key={link}
+                  component="a"
+                  href="#"
+                  sx={{
+                    position: "relative",
+                    display: "block",
+                    overflow: "hidden",
+                    height: "32px",
+                    textDecoration: "none",
 
-          "&:hover .link-inner": {
-            transform: "translateY(-50%)",
-          },
-        }}
-      >
-        <Box
-          className="link-inner"
-          sx={{
-            transition: "transform 0.35s cubic-bezier(0.76, 0, 0.24, 1)",
-          }}
-        >
-          <Typography
-            sx={{
-              fontSize: { xs: "1.05rem", md: "1.2rem" },
-              fontWeight: 700,
-              color: "#fff",
-              height: "32px",
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            {link}
-          </Typography>
 
-          <Typography
-            sx={{
-              fontSize: { xs: "1.05rem", md: "1.2rem" },
-              fontWeight: 500,
-              color: "#fff",
-              height: "32px",
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            {link}
-          </Typography>
-        </Box>
-      </Box>
-    ))}
-  </Box>
-))}
+                    "&:hover .link-inner": {
+                      transform: "translateY(-50%)",
+                    },
+                  }}
+                >
+                  <Box
+                    className="link-inner"
+                    sx={{
+                      transition: "transform 0.35s cubic-bezier(0.76, 0, 0.24, 1)",
+                    }}
+                  >
+                    <Typography
+                      sx={{
+                        fontSize: { xs: "1.05rem", md: "1.2rem" },
+                        fontWeight: 700,
+                        color: "#fff",
+                        height: "32px",
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      {link}
+                    </Typography>
+
+                    <Typography
+                      sx={{
+                        fontSize: { xs: "1.05rem", md: "1.2rem" },
+                        fontWeight: 500,
+                        color: "#fff",
+                        height: "32px",
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      {link}
+                    </Typography>
+                  </Box>
+                </Box>
+              ))}
+            </Box>
+          ))}
         </Box>
 
         {/* big wordmark */}
