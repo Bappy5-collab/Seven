@@ -194,11 +194,13 @@ export default function Navbar() {
         component="nav"
         sx={{
           position: scrolled ? "fixed" : "absolute",
-          top: "14px",
-          left: scrolled ? "14px" : 0,
-          right: scrolled ? "14px" : 0,
+          // mobile: flush to the top edge, full width, no gap; md+ unchanged
+          top: { xs: 0, md: "14px" },
+          left: { xs: 0, md: scrolled ? "14px" : 0 },
+          right: { xs: 0, md: scrolled ? "14px" : 0 },
           zIndex: 100,
-          borderRadius: scrolled ? "999px" : "14px",
+          // square on mobile; rounded only from md up
+          borderRadius: { xs: 0, md: scrolled ? "999px" : "14px" },
           px: { xs: 2.5, md: 3 },
           py: 0,
           display: "flex",

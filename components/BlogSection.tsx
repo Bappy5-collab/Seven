@@ -318,6 +318,7 @@ export default function BlogSection() {
                                 lineHeight: 1,
                                 letterSpacing: { xs: "-0.03em", md: "normal" },
                                 width: { xs: "100%", md: "auto" },
+
                             }}
                         >
                             New
