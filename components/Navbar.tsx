@@ -687,9 +687,9 @@ export default function Navbar() {
           transition: "opacity 0.5s ease, transform 0.55s cubic-bezier(0.16,1,0.3,1)",
         }}
       >
-        <Box sx={{ px: 3, pt: 2.5, pb: 3 }}>
+        <Box sx={{ px: 3, pt: 2, pb: 2.5 }}>
           {/* Header: logo + close */}
-          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
+          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1.5 }}>
             <Typography
               sx={{
                 color: "#fff",
@@ -735,18 +735,21 @@ export default function Navbar() {
           </Box>
 
           {/* Menu items */}
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 0.2, mb: 3 }}>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 0, mb: 2 }}>
             {navLinks.map((link) => {
               const isExpanded = mobileExpanded === link.label;
               const subItems = link.dropdown?.columns.flat() ?? [];
               return (
-                <Box key={link.label}>
+                <Box
+                  key={link.label}
+                  sx={{ borderBottom: "1px solid rgba(255,255,255,0.14)" }}
+                >
                   <Box
                     sx={{
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "space-between",
-                      py: 0.4,
+                      py: 1.1,
                     }}
                   >
                     <Typography
@@ -756,7 +759,7 @@ export default function Navbar() {
                       sx={{
                         color: "#fff",
                         fontWeight: 600,
-                        fontSize: "1.85rem",
+                        fontSize: "1.6rem",
                         letterSpacing: "-0.02em",
                         lineHeight: 1.15,
                         cursor: "pointer",
@@ -844,7 +847,7 @@ export default function Navbar() {
               fontWeight: 600,
               fontSize: "1.05rem",
               textTransform: "none",
-              py: 1.7,
+              py: 1.4,
               borderRadius: "999px",
               "&:hover": { bgcolor: "#fff" },
               "& .MuiButton-endIcon": { ml: 0.6 },
