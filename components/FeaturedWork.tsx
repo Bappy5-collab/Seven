@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import NorthEastIcon from "@mui/icons-material/NorthEast";
 import SearchIcon from "@mui/icons-material/Search";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+import { getLenis } from "./lenisInstance";
 
 type Project = {
     name: string;
@@ -98,7 +99,7 @@ const projects: Project[] = [
     },
 ];
 
-function ProjectImage({ project, isActive, isMobile }: { project: Project; isActive: boolean; isMobile: boolean }) {
+function ProjectImage({ project, isActive, selected }: { project: Project; isActive: boolean; selected: boolean }) {
     const [cursor, setCursor] = useState({ x: 0, y: 0, visible: false });
     const ref = useRef<HTMLDivElement>(null);
 
@@ -107,6 +108,9 @@ function ProjectImage({ project, isActive, isMobile }: { project: Project; isAct
         if (!rect) return;
         setCursor({ x: e.clientX - rect.left, y: e.clientY - rect.top, visible: true });
     };
+
+    // colored bg shows on direct hover OR when this project's name was clicked
+    const show = cursor.visible || selected;
 
     const isDark = project.hoverColor === "#111" || project.hoverColor === "#23408a" || project.hoverColor === "#ec5b8d" || project.hoverColor === "#ff5fa8";
     const titleColor = isDark ? "#fff" : "#111";
@@ -135,20 +139,27 @@ function ProjectImage({ project, isActive, isMobile }: { project: Project; isAct
                 sizes="(max-width: 768px) 100vw, 60vw"
             />
 
-            {/* Hover overlay — colored background, title, pill */}
+            {/* Hover overlay — colored background, title, pill.
+                Rises up from the bottom with a rounded top, then flattens —
+                same gesture as the blog-card blur overlay. */}
             <Box
                 sx={{
                     position: "absolute",
                     inset: 0,
                     bgcolor: project.hoverColor,
-                    opacity: cursor.visible ? 1 : 0,
-                    transition: "opacity 0.4s ease",
+                    transform: show ? "translateY(0%)" : "translateY(100%)",
+                    borderTopLeftRadius: show ? "0%" : "50%",
+                    borderTopRightRadius: show ? "0%" : "50%",
+                    transition: show
+                        ? "transform 0.35s cubic-bezier(0.33,1,0.68,1), border-radius 0.22s ease 0.16s"
+                        : "transform 0.3s ease, border-radius 0.25s ease",
                     pointerEvents: "none",
                     zIndex: 1,
                     display: { xs: "none", md: "block" },
                 }}
             >
-                {/* Hover title — top-left */}
+                {/* Hover title — top-left. Appears only after the sheet has
+                    risen to fill the image, never during the rise. */}
                 <Typography
                     sx={{
                         position: "absolute",
@@ -160,6 +171,10 @@ function ProjectImage({ project, isActive, isMobile }: { project: Project; isAct
                         fontSize: { md: "2.2rem", lg: "2.8rem", xl: "3.2rem" },
                         lineHeight: 1.1,
                         letterSpacing: "-0.02em",
+                        opacity: show ? 1 : 0,
+                        transition: show
+                            ? "opacity 0.3s ease 0.34s"
+                            : "opacity 0.12s ease",
                     }}
                 >
                     {project.hoverTitle}
@@ -180,6 +195,10 @@ function ProjectImage({ project, isActive, isMobile }: { project: Project; isAct
                         borderRadius: "999px",
                         px: 2,
                         py: 1,
+                        opacity: show ? 1 : 0,
+                        transition: show
+                            ? "opacity 0.3s ease 0.34s"
+                            : "opacity 0.12s ease",
                     }}
                 >
                     <SearchIcon sx={{ fontSize: "1.05rem", color: titleColor }} />
@@ -189,31 +208,6 @@ function ProjectImage({ project, isActive, isMobile }: { project: Project; isAct
                     <TrendingUpIcon sx={{ fontSize: "1.05rem", color: titleColor }} />
                 </Box>
             </Box>
-
-            {/* Cursor-following circle with arrow — only inside image area */}
-            {!isMobile && (
-                <Box
-                    sx={{
-                        position: "absolute",
-                        left: cursor.x,
-                        top: cursor.y,
-                        transform: "translate(-50%, -50%)",
-                        width: 110,
-                        height: 110,
-                        borderRadius: "50%",
-                        bgcolor: "#b8f5e4",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        pointerEvents: "none",
-                        zIndex: 5,
-                        opacity: cursor.visible ? 1 : 0,
-                        transition: "opacity 0.2s ease",
-                    }}
-                >
-                    <NorthEastIcon sx={{ color: "#000", fontSize: "2rem" }} />
-                </Box>
-            )}
 
             {/* Mobile overlay (project name + date) */}
             <Box
@@ -260,6 +254,37 @@ export default function FeaturedWork() {
     const currentProgress = useRef(0);
     const outerRef = useRef<HTMLDivElement>(null);
     const touchStartY = useRef(0);
+    // cursor-following arrow circle — tracked across the whole right panel
+    const rightPanelRef = useRef<HTMLDivElement>(null);
+    const [panelCursor, setPanelCursor] = useState({ x: 0, y: 0, visible: false });
+    // hovering a project name lights up that image's colored bg (no scroll);
+    // clicking it ALSO smooth-scrolls the page to that project (via Lenis) and
+    // keeps it lit. A real wheel/touch scroll clears the click selection.
+    const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+    const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+
+    const goToProject = (i: number) => {
+        const el = outerRef.current;
+        if (!el) return;
+        setSelectedIndex(i);
+        const sectionTop = el.getBoundingClientRect().top + window.scrollY;
+        const range = el.offsetHeight - window.innerHeight;
+        const progress = projects.length > 1 ? i / (projects.length - 1) : 0;
+        const targetY = sectionTop + progress * range;
+        const lenis = getLenis();
+        if (lenis) lenis.scrollTo(targetY, { duration: 1.4 });
+        else window.scrollTo({ top: targetY, behavior: "smooth" });
+    };
+
+    useEffect(() => {
+        const clearSelection = () => setSelectedIndex(null);
+        window.addEventListener("wheel", clearSelection, { passive: true });
+        window.addEventListener("touchmove", clearSelection, { passive: true });
+        return () => {
+            window.removeEventListener("wheel", clearSelection);
+            window.removeEventListener("touchmove", clearSelection);
+        };
+    }, []);
 
     useEffect(() => {
         const el = outerRef.current;
@@ -407,11 +432,18 @@ export default function FeaturedWork() {
                                     return (
                                         <Box
                                             key={i}
+                                            onClick={() => goToProject(i)}
+                                            onMouseEnter={() => setHoveredIndex(i)}
+                                            onMouseLeave={() => setHoveredIndex(null)}
                                             sx={{
                                                 height: `${rowHeight}px`,
                                                 display: "flex",
                                                 alignItems: "flex-start",
                                                 opacity,
+                                                cursor: "pointer",
+                                                transform: "translateX(0)",
+                                                transition: "transform 0.35s cubic-bezier(0.16,1,0.3,1)",
+                                                "&:hover": { transform: "translateX(12px)" },
                                             }}
                                         >
                                             <Typography
@@ -454,11 +486,20 @@ export default function FeaturedWork() {
 
                     {/* ── RIGHT PANEL: image carousel ── */}
                     <Box
+                        ref={rightPanelRef}
+                        onMouseMove={(e) => {
+                            const r = rightPanelRef.current?.getBoundingClientRect();
+                            if (!r) return;
+                            setPanelCursor({ x: e.clientX - r.left, y: e.clientY - r.top, visible: true });
+                        }}
+                        onMouseEnter={() => setPanelCursor((c) => ({ ...c, visible: true }))}
+                        onMouseLeave={() => setPanelCursor((c) => ({ ...c, visible: false }))}
                         sx={{
                             flex: 1,
                             height: "100%",
                             overflow: "hidden",
                             position: "relative",
+                            cursor: !isMobile && panelCursor.visible ? "none" : "default",
                         }}
                     >
                         {/* Mobile label */}
@@ -527,10 +568,40 @@ export default function FeaturedWork() {
                                     key={i}
                                     project={p}
                                     isActive={i === activeIndex}
-                                    isMobile={isMobile}
+                                    selected={selectedIndex === i || hoveredIndex === i}
                                 />
                             ))}
                         </Box>
+
+                        {/* Cursor-following arrow circle — follows the cursor across
+                            the whole image carousel, popping from small to full size. */}
+                        {!isMobile && (
+                            <Box
+                                sx={{
+                                    position: "absolute",
+                                    left: panelCursor.x,
+                                    top: panelCursor.y,
+                                    transform: panelCursor.visible
+                                        ? "translate(-50%, -50%) scale(1)"
+                                        : "translate(-50%, -50%) scale(0.15)",
+                                    width: 110,
+                                    height: 110,
+                                    borderRadius: "50%",
+                                    bgcolor: "#b8f5e4",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    pointerEvents: "none",
+                                    zIndex: 5,
+                                    opacity: panelCursor.visible ? 1 : 0,
+                                    transition: panelCursor.visible
+                                        ? "transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.18s ease"
+                                        : "transform 0.22s ease, opacity 0.22s ease",
+                                }}
+                            >
+                                <NorthEastIcon sx={{ color: "#000", fontSize: "2rem" }} />
+                            </Box>
+                        )}
                     </Box>
                 </Box>
             </Box>

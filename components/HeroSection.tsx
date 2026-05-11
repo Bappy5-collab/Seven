@@ -20,9 +20,11 @@ export default function HeroSection() {
   const [current, setCurrent] = useState(0);
   const [fading, setFading] = useState(false);
 
-  // Set random starting image on each page load (client-side only to avoid hydration mismatch)
+  // Set random starting image on each page load. Has to happen after mount
+  // (a random value on the server would cause a hydration mismatch).
   useEffect(() => {
     const random = Math.floor(Math.random() * bannerImages.length);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setCurrent(random);
   }, []);
 

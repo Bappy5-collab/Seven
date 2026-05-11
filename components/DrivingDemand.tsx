@@ -106,9 +106,9 @@ export default function DrivingDemand() {
                 >
                     <Typography
                         sx={{
-                            fontSize: { xs: "1rem", md: "1.4rem" },
+                            fontSize: { xs: "1.1rem", md: "1.6rem" },
                             fontWeight: 600,
-                            lineHeight: { xs: 1.4, md: 1 },
+                            lineHeight: { xs: 1.5, md: 1.35 },
                             color: "#111",
                         }}
                     >
@@ -156,9 +156,9 @@ export default function DrivingDemand() {
                     <Typography
                         sx={{
                             display: { xs: "block", md: "none" },
-                            fontSize: "1rem",
+                            fontSize: "1.1rem",
                             fontWeight: 600,
-                            lineHeight: 1.4,
+                            lineHeight: 1.55,
                             color: "#111",
                             mt: 3,
                         }}
