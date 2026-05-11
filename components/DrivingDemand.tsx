@@ -3,24 +3,24 @@ import { Box, Typography, Button, Stack } from "@mui/material";
 import Image from "next/image";
 
 const logos = [
-    { src: "/agency/emirates-logo-png_seeklogo-478189.png", w: 110, h: 40 },
-    { src: "/agency/JD_Sports-Logo.wine.png", w: 120, h: 40 },
-    { src: "/agency/SharkNinja_logo.png", w: 120, h: 40 },
-    { src: "/agency/images.png", w: 100, h: 40 },
-    { src: "/agency/images (1).png", w: 100, h: 40 },
-    { src: "/agency/s-l1200.jpg", w: 110, h: 40 },
+    { src: "/agency/emirates-logo-png_seeklogo-478189-removebg-preview.png", w: 150, h: 56 },
+    { src: "/agency/JD_Sports-Logo.wine.png", w: 164, h: 56 },
+    { src: "/agency/SharkNinja_logo-removebg-preview.png", w: 164, h: 56 },
+    { src: "/agency/images-removebg-preview.png", w: 138, h: 56 },
+    { src: "/agency/images__1_-removebg-preview.png", w: 138, h: 56 },
+    { src: "/agency/s-l1200-removebg-preview.png", w: 150, h: 56 },
 ];
 
 export default function DrivingDemand() {
     return (
-        <Box sx={{ py: { xs: 6, md: 10 }, overflow: "hidden" }}>
+        <Box sx={{ py: { xs: 8, md: 12 }, overflow: "hidden" }}>
 
             <Box
                 sx={{
                     display: "flex",
                     flexDirection: { xs: "column", md: "row" },
                     alignItems: { xs: "flex-start", md: "center" },
-                    px: { xs: 3, md: 8 },
+                    px: { xs: 3, md: 4 },
                     mb: { xs: 8, md: 15 },
                     gap: { xs: 2, md: 5 },
                 }}
@@ -53,7 +53,7 @@ export default function DrivingDemand() {
                     <Box
                         sx={{
                             display: "flex",
-                            gap: 6,
+                            gap: 9,
                             width: "max-content",
                             animation: "marquee 18s linear infinite",
                             "@keyframes marquee": {
@@ -90,10 +90,9 @@ export default function DrivingDemand() {
                 sx={{
                     display: "flex",
                     justifyContent: "space-between",
-
                     flexWrap: { xs: "wrap", md: "nowrap" },
                     gap: { xs: 5, md: 25 },
-                    px: { xs: 3, md: 8 },
+                    px: { xs: 3, md: 4 },
                 }}
             >
                 {/* Left — paragraph (desktop only; on mobile it renders inside the right block) */}
@@ -170,9 +169,9 @@ export default function DrivingDemand() {
 
                     <Stack
                         direction={{ xs: "column", md: "row" }}
-                        spacing={{ xs: 1.5, md: 2 }}
+                        spacing={{ xs: 1.5, md: 0 }}
                         sx={{
-                            mt: { xs: 3, md: 4 },
+                            mt: { xs: 3, md: 1 },
                             alignItems: { xs: "stretch", md: "center" },
                         }}
                     >
@@ -180,7 +179,7 @@ export default function DrivingDemand() {
                             sx={{
                                 borderRadius: "999px",
                                 px: 4,
-                                py: { xs: 2, md: 1.5 },
+                                py: { xs: 2, md: 1.7 },
                                 background: "#fff",
                                 color: "#111",
                                 fontWeight: 600,
@@ -190,14 +189,12 @@ export default function DrivingDemand() {
                                 position: "relative",
                                 overflow: "hidden",
                                 width: { xs: "100%", md: "auto" },
-
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
                                 lineHeight: 1,
-
                                 "&:hover": {
-                                    background: "#f5f5f5",
+                                    background: "#fff",
                                 },
 
                                 "&:hover .text": {
@@ -259,25 +256,17 @@ export default function DrivingDemand() {
                                 borderRadius: "999px",
                                 px: { xs: 0, md: 4 },
                                 py: { xs: 1, md: 1.5 },
-                                background: { xs: "transparent", md: "#fff" },
                                 color: "#111",
-
                                 fontWeight: 600,
                                 fontSize: { xs: "1rem", md: "0.88rem" },
                                 textTransform: "none",
                                 boxShadow: "none",
                                 position: "relative",
                                 overflow: "hidden",
-
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
-                                lineHeight: 1,
-
-                                "&:hover": {
-                                    background: { xs: "transparent", md: "#f5f5f5" },
-                                },
-
+                                lineHeight: 1,              
                                 "&:hover .text": {
                                     transform: "translateY(-120%)",
                                 },

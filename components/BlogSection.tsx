@@ -164,7 +164,7 @@ function BlogCard({ post }: { post: Post }) {
                         display: "inline-flex",
                         alignItems: "center",
                         gap: 0.9,
-                        bgcolor: "#efeae2",
+                        bgcolor: "white",
                         borderRadius: "999px",
                         pl: 0.6,
                         pr: 1.4,
@@ -182,9 +182,9 @@ function BlogCard({ post }: { post: Post }) {
                     />
                     <Typography
                         sx={{
-                            fontSize: "0.82rem",
-                            fontWeight: 600,
-                            color: "#111",
+                            fontSize: "0.90rem",
+                            fontWeight: 700,
+                            color: "#605c5c",
                             lineHeight: 1,
                         }}
                     >
@@ -198,7 +198,7 @@ function BlogCard({ post }: { post: Post }) {
                         display: "inline-flex",
                         alignItems: "center",
                         gap: 0.5,
-                        bgcolor: "#efeae2",
+                        bgcolor: "white",
                         borderRadius: "999px",
                         px: 1.2,
                         py: 0.5,
@@ -207,9 +207,9 @@ function BlogCard({ post }: { post: Post }) {
                     <AccessTimeIcon sx={{ fontSize: "0.95rem", color: "#444" }} />
                     <Typography
                         sx={{
-                            fontSize: "0.82rem",
-                            color: "#222",
-                            fontWeight: 500,
+                            fontSize: "0.90rem",
+                            fontWeight: 700,
+                            color: "#605c5c",
                             lineHeight: 1,
                         }}
                     >
@@ -222,7 +222,7 @@ function BlogCard({ post }: { post: Post }) {
             <Typography
                 sx={{
                     fontWeight: 700,
-                    fontSize: { xs: "1.15rem", md: "1.35rem" },
+                    fontSize: { xs: "1.15rem", md: "1.75rem" },
                     lineHeight: 1.25,
                     letterSpacing: "-0.02em",
                     color: "#111",
@@ -256,13 +256,13 @@ export default function BlogSection() {
     }, []);
 
     return (
-        <Box sx={{ py: { xs: 4, md: 6 }, px: { xs: 2, md: 6 } }}>
+        <Box sx={{ py: { xs: 8, md: 12 }, px: { xs: 3, md: 4 } }}>
             {/* Header */}
 
             <Box
                 sx={{
                     width: "100%",
-                    mb: { xs: 4, md: 10 },
+                    mb: { xs: 4, md: 4 },
                 }}
             >
                 <Box
@@ -333,13 +333,11 @@ export default function BlogSection() {
                                 boxShadow: "none",
                                 position: "relative",
                                 overflow: "hidden",
-
                                 alignItems: "center",
                                 justifyContent: "center",
                                 lineHeight: 1,
-
                                 "&:hover": {
-                                    background: "#f5f5f5",
+                                    background: "#fff",
                                 },
 
                                 "&:hover .text": {
@@ -415,12 +413,12 @@ export default function BlogSection() {
                 sx={{
                     display: "flex",
                     gap: { xs: 2, md: 2.5 },
-                    maxWidth: "1400px",
                     overflowX: { xs: "auto", md: "visible" },
                     scrollSnapType: { xs: "x mandatory", md: "none" },
                     WebkitOverflowScrolling: "touch",
+                    // align the card row with the "What's New" heading (section px)
                     px: { xs: 2, md: 0 },
-                    mx: { xs: -2, md: "auto" },
+                    mx: { xs: -2, md: 0 },
                     "&::-webkit-scrollbar": { display: "none" },
                     scrollbarWidth: "none",
                 }}
@@ -472,7 +470,7 @@ export default function BlogSection() {
                     textTransform: "none",
                     boxShadow: "none",
                     border: "1px solid #ddd",
-                    "&:hover": { background: "#f5f5f5" },
+                    "&:hover": { background: "#fff" },
                 }}
             >
                 Explore More Thoughts ↗

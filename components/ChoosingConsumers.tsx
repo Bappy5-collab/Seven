@@ -65,7 +65,7 @@ export default function ChoosingConsumers() {
       sx={{
         position: "relative",
         bgcolor: "#f0f0ec",
-        py: { xs: 8, md: 14 },
+        py: { xs: 8, md: 12 },
         overflow: "hidden",
         cursor: { md: "none" },
       }}

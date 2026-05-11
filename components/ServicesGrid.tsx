@@ -82,8 +82,8 @@ const ServiceItem = ({
         zIndex: 2,
         display: "flex",
         alignItems: "center",
-        gap: { xs: 2, md: 2.5 },
-        py: { xs: 2, md: 4 },
+        gap: { xs: 2, md: 2 },
+        py: { xs: 1, md: 1.5 },
         px: { xs: 0, md: 3 },
       }}
     >
@@ -127,8 +127,8 @@ const ServiceItem = ({
 
       <Typography
         sx={{
-          fontSize: { xs: "1.55rem", md: "40px" },
-          fontWeight: 500,
+          fontSize: { xs: "1.55rem", md: "50px" },
+          fontWeight: 600,
           color: isHover ? "#fff" : "#000",
           transition: "color 0.3s ease",
           whiteSpace: { xs: "normal", md: "nowrap" },
@@ -148,7 +148,7 @@ const ServicesSection = () => {
   const [hovered, setHovered] = useState<string | null>(null);
 
   return (
-    <Box sx={{ px: { xs: 3, md: 8 }, py: 8 }}>
+    <Box sx={{ px: { xs: 3, md: 4 }, py: { xs: 8, md: 12 } }}>
       {/* Mobile heading: "Our [img] Services" */}
       <Box sx={{ display: { xs: "block", md: "none" }, mb: 4 }}>
         <Box
@@ -211,48 +211,48 @@ const ServicesSection = () => {
           mb: 6,
         }}
       >
-       <Box
-                        sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            flexWrap: "wrap",
-                            gap: 2,
-                        }}
-                    >
-                        <Typography
-                            sx={{
-                                fontSize: { xs: "40px", md: "80px" },
-                                fontWeight: 700,
-                                color: "#111",
-                                lineHeight: 1,
-                            }}
-                        >
-                            Our
-                        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: 2,
+          }}
+        >
+          <Typography
+            sx={{
+              fontSize: { xs: "40px", md: "80px" },
+              fontWeight: 700,
+              color: "#111",
+              lineHeight: 1,
+            }}
+          >
+            Our
+          </Typography>
 
-                        <Box
-                            component="img"
-                            src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e"
-                            alt="preview"
-                            sx={{
-                                width: { xs: 50, md: 80 },
-                                height: { xs: 50, md: 80 },
-                                borderRadius: "20px",
-                                objectFit: "cover",
-                            }}
-                        />
+          <Box
+            component="img"
+            src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e"
+            alt="preview"
+            sx={{
+              width: { xs: 50, md: 80 },
+              height: { xs: 50, md: 80 },
+              borderRadius: "20px",
+              objectFit: "cover",
+            }}
+          />
 
-                        <Typography
-                            sx={{
-                                fontSize: { xs: "40px", md: "80px" },
-                                fontWeight: 700,
-                                color: "#111",
-                                lineHeight: 1,
-                            }}
-                        >
-                            Services
-                        </Typography>
-                    </Box>
+          <Typography
+            sx={{
+              fontSize: { xs: "40px", md: "80px" },
+              fontWeight: 700,
+              color: "#111",
+              lineHeight: 1,
+            }}
+          >
+            Services
+          </Typography>
+        </Box>
 
         <Button
           sx={{
@@ -271,7 +271,7 @@ const ServicesSection = () => {
             alignItems: "center",
             justifyContent: "center",
             lineHeight: 1,
-            "&:hover": { background: "#f5f5f5" },
+            "&:hover": { background: "#fff" },
             "&:hover .text": { transform: "translateY(-120%)" },
             "&:hover .text-hover": { transform: "translateY(0%)" },
           }}
@@ -372,7 +372,7 @@ const ServicesSection = () => {
           alignItems: "center",
           justifyContent: "center",
           lineHeight: 1,
-          "&:hover": { background: "#f5f5f5" },
+          "&:hover": { background: "#fff" },
         }}
       >
         View All Services ↗

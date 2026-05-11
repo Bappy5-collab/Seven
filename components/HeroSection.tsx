@@ -10,10 +10,10 @@ const bannerImages = [
 ];
 
 const awardLogos = [
-  { abbr: "GLOBAL\nSEARCH\nAWARDS" },
-  { abbr: "The\nDrum" },
-  { abbr: "UK Social\nMedia\nAwards" },
-  { abbr: "CONTENT\nAWARDS" },
+  { src: "/Banner/gobal.png", alt: "Global Search Awards" },
+  { src: "/Banner/the-drum.png", alt: "The Drum" },
+  { src: "/Banner/social-award.png", alt: "UK Social Media Awards" },
+  { src: "/Banner/content-award.png", alt: "Content Awards" },
 ];
 
 export default function HeroSection() {
@@ -124,7 +124,7 @@ export default function HeroSection() {
             Content Marketing Agency
           </Typography>
 
-          <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 0.3, md: 0.5 } }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 0 }}>
             <Box
               component="img"
               src="/navbar/plant1.png"
@@ -136,35 +136,20 @@ export default function HeroSection() {
                 filter: "brightness(0) invert(1)",
               }}
             />
-            {awardLogos.map((a, i) => (
+            {awardLogos.map((a) => (
               <Box
-                key={i}
+                key={a.src}
+                component="img"
+                src={a.src}
+                alt={a.alt}
                 sx={{
-                  px: { xs: 0.4, md: 0.6 },
-                  py: { xs: 0.5, md: 0.8 },
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  minWidth: { xs: "44px", md: "58px" },
-                  height: { xs: "36px", md: "44px" },
+                  width: { xs: "54px", md: "68px" },
+                  height: { xs: "34px", md: "42px" },
+                  objectFit: "contain",
+                  opacity: 0.9,
+                  filter: "brightness(0) invert(1)",
                 }}
-              >
-                <Typography
-                  sx={{
-                    color: "#fff",
-                    fontSize: { xs: "0.42rem", md: "0.52rem" },
-                    fontWeight: 700,
-                    letterSpacing: "0.04em",
-                    textTransform: "uppercase",
-                    textAlign: "center",
-                    lineHeight: 1.3,
-                    whiteSpace: "pre-line",
-                    opacity: 0.9,
-                  }}
-                >
-                  {a.abbr}
-                </Typography>
-              </Box>
+              />
             ))}
             <Box
               component="img"

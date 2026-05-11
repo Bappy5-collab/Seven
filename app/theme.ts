@@ -49,6 +49,12 @@ const theme = createTheme({
           borderRadius: 0,
           padding: "10px 24px",
           fontSize: "0.9rem",
+          transition:
+            "background-color 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, color 0.25s ease, border-radius 0.35s ease",
+          // Every button tucks its corners in a little on hover.
+          "&:hover": {
+            borderRadius: 16,
+          },
         },
       },
     },

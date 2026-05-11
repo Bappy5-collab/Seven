@@ -346,7 +346,9 @@ export default function FeaturedWork() {
                         background: "#0a0a0a",
                         overflow: "hidden",
                         display: "flex",
-                        px: { xs: 2, sm: 3, md: 6, lg: 8 },
+                        // m + px lands the card's content at the same left/right
+                        // edge as the other sections (which use px: { xs: 3, md: 8 }).
+                        px: { xs: 2, md: 4 },
                         m: { xs: 1, md: 2 },
                         borderRadius: "16px",
                     }}
@@ -554,7 +556,7 @@ export default function FeaturedWork() {
                         lineHeight: 1,
 
                         "&:hover": {
-                            background: "#f5f5f5",
+                            background: "#fff",
                         },
 
                         "&:hover .text": {

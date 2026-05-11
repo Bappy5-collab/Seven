@@ -300,11 +300,11 @@ export default function Navbar() {
                     minWidth: "auto",
                     whiteSpace: "nowrap",
                     flexShrink: 0,
-                    transition: "background-color 0.2s, color 0.2s",
+                    transition: "background-color 0.2s, color 0.2s, border-radius 0.35s ease",
                     "&:hover": {
                       color: "black",
                       bgcolor: "white",
-                      borderRadius: "50px",
+                      borderRadius: "16px",
                     },
                     "& .MuiButton-endIcon": { ml: 0.3 },
                   }}
@@ -554,7 +554,7 @@ export default function Navbar() {
                 lineHeight: 1,
 
                 "&:hover": {
-                  background: "#f5f5f5",
+                  background: "#fff",
                 },
 
                 "&:hover .text": {
@@ -818,7 +818,7 @@ export default function Navbar() {
               textTransform: "none",
               py: 1.7,
               borderRadius: "999px",
-              "&:hover": { bgcolor: "#f0f0f0" },
+              "&:hover": { bgcolor: "#fff" },
               "& .MuiButton-endIcon": { ml: 0.6 },
             }}
           >
