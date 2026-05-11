@@ -12,7 +12,7 @@ const cards = [
         scale: 1,
         textColor: "#fff",
         subColor: "rgba(255,255,255,0.85)",
-        img: "/Banner/Screenshot 2026-05-04 173305.png",
+        img: "/Banner/banner-1.png",
         title: "Pioneers",
         body: [
             "We're dedicated to creating the industry narrative that others follow 3 years from now. We paved the path for creative SEO, multi-channel search with Digital PR, and Social Search and we will continue to do it.",
@@ -25,7 +25,7 @@ const cards = [
         scale: 1.04,
         textColor: "#111",
         subColor: "rgba(0,0,0,0.65)",
-        img: "/Banner/Screenshot 2026-05-04 173321.png",
+        img: "/Banner/banner-2.png",
         title: "Award Winning",
         body: [
             "A roll top bath full of 79 awards. Voted The Drum's best agency outside of London. We are official judges for industry awards including Global Search Awards and Global Content Marketing Awards.",
@@ -37,7 +37,7 @@ const cards = [
         scale: 1.08,
         textColor: "#111",
         subColor: "rgba(0,0,0,0.58)",
-        img: "/Banner/Screenshot 2026-05-04 173347.png",
+        img: "/Banner/banner-3.png",
         title: "Speed",
         body: [
             "People ask us why we are called Rise at Seven? Ever heard the saying Early Bird catches the worm? Google is moving fast, but humans are moving faster. We chase consumers, not algorithms. We’ve created a service which takes ideas to result within 60 minutes.",

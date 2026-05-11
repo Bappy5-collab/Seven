@@ -129,7 +129,7 @@ export default function HeroSection() {
           <Box sx={{ display: "flex", alignItems: "center", gap: 0 }}>
             <Box
               component="img"
-              src="/navbar/plant1.png"
+              src="/Navbar/plant1.png"
               alt=""
               sx={{
                 height: { xs: "36px", md: "44px" },
@@ -155,7 +155,7 @@ export default function HeroSection() {
             ))}
             <Box
               component="img"
-              src="/navbar/plant.png"
+              src="/Navbar/plant.png"
               alt=""
               sx={{
                 height: { xs: "36px", md: "44px" },
