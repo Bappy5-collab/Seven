@@ -134,14 +134,27 @@ export default function Footer() {
                   justifyContent: "center",
                   flexShrink: 0,
                   transition: "background-color 0.15s",
-                  "&:hover": { bgcolor: "#9aebbb" },
+
+                  "&:hover": {
+                    bgcolor: "white",
+                  },
+
+                  "&:hover .arrow": {
+                    transform: "rotate(90deg) translateY(2px)", // niche dike baka
+                  },
                 }}
               >
-                <NorthEastIcon sx={{ fontSize: 18 }} />
+                <NorthEastIcon
+                  className="arrow"
+                  sx={{
+                    fontSize: 18,
+                    transition: "transform 0.3s ease",
+                  }}
+                />
               </Box>
             </Box>
 
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.80 }}>
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.8 }}>
               {socials.map((s) => (
                 <Box
                   key={s.label}
@@ -151,27 +164,37 @@ export default function Footer() {
                   sx={{
                     display: "inline-flex",
                     alignItems: "center",
-                    gap: 0.7,
+                    gap: 0.9,
                     color: "#fff",
                     textDecoration: "none",
                     transition: "opacity 0.15s",
-                    "&:hover": { opacity: 0.7 },
+
+                    "&:hover": {
+                      opacity: 0.7,
+                    },
+
                     "&:hover .arrow": {
                       transform: "translate(2px, -2px)",
+                    },
+
+                    "&:hover .social-icon": {
+                      borderRadius: "4px",
                     },
                   }}
                 >
                   <Box
+                    className="social-icon"
                     sx={{
                       width: 40,
                       height: 20,
                       bgcolor: "#fff",
-                      borderRadius: '50px',
+                      borderRadius: "50px", // default full rounded
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
                       color: "#000",
                       flexShrink: 0,
+                      transition: "all 0.25s ease",
                     }}
                   >
                     {s.render()}
@@ -191,35 +214,68 @@ export default function Footer() {
           </Box>
 
           {/* link columns */}
-          {linkColumns.map((col, idx) => (
-            <Box
-              key={idx}
-              sx={{
-                borderLeft: { md: "1px solid #1f1f1f" },
-                pl: { md: 4 },
-              }}
-            >
-              {col.map((link) => (
-                <Typography
-                  key={link}
-                  component="a"
-                  href="#"
-                  sx={{
-                    display: "block",
-                    fontSize: { xs: "1.05rem", md: "1.2rem" },
-                    fontWeight: 500,
-                    color: "#fff",
-                    textDecoration: "none",
-                    mb: 1.8,
-                    transition: "opacity 0.15s",
-                    "&:hover": { opacity: 0.7 },
-                  }}
-                >
-                  {link}
-                </Typography>
-              ))}
-            </Box>
-          ))}
+        {linkColumns.map((col, idx) => (
+  <Box
+    key={idx}
+    sx={{
+      borderLeft: { md: "2px solid #1f1f1f" },
+      pl: { md: 4 },
+    }}
+  >
+    {col.map((link) => (
+      <Box
+        key={link}
+        component="a"
+        href="#"
+        sx={{
+          position: "relative",
+          display: "block",
+          overflow: "hidden",
+          height: "32px",
+          textDecoration: "none",
+          
+
+          "&:hover .link-inner": {
+            transform: "translateY(-50%)",
+          },
+        }}
+      >
+        <Box
+          className="link-inner"
+          sx={{
+            transition: "transform 0.35s cubic-bezier(0.76, 0, 0.24, 1)",
+          }}
+        >
+          <Typography
+            sx={{
+              fontSize: { xs: "1.05rem", md: "1.2rem" },
+              fontWeight: 700,
+              color: "#fff",
+              height: "32px",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            {link}
+          </Typography>
+
+          <Typography
+            sx={{
+              fontSize: { xs: "1.05rem", md: "1.2rem" },
+              fontWeight: 500,
+              color: "#fff",
+              height: "32px",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            {link}
+          </Typography>
+        </Box>
+      </Box>
+    ))}
+  </Box>
+))}
         </Box>
 
         {/* big wordmark */}

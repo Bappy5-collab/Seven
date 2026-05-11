@@ -347,7 +347,7 @@ export default function FeaturedWork() {
     const theme = useTheme();
     const isLg = useMediaQuery(theme.breakpoints.up("lg"));
     const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-    const rowHeight = isLg ? 78 : 68;
+    const rowHeight = isLg ? 110 : 92;
 
     const progressIndex = smoothProgress * (projects.length - 1);
     const imageOffset = progressIndex;
@@ -452,7 +452,7 @@ export default function FeaturedWork() {
                                                     fontWeight: 700,
                                                     lineHeight: 1,
                                                     letterSpacing: "-0.03em",
-                                                    fontSize: { md: "3rem", lg: "3.8rem", xl: "4.4rem" },
+                                                    fontSize: { md: "3.6rem", lg: "4.7rem", xl: "5.4rem" },
                                                     minWidth: 0,
                                                     whiteSpace: "nowrap",
                                                     overflow: "hidden",
