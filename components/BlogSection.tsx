@@ -4,6 +4,31 @@ import Image from "next/image";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import NorthEastIcon from "@mui/icons-material/NorthEast";
 import { useEffect, useRef, useState } from "react";
+import { useInView } from "./useInView";
+
+const EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
+
+// Heading word that rises up from below when it scrolls into view.
+const riseSx = (inView: boolean, delay = 0) => ({
+    display: "inline-block",
+    opacity: inView ? 1 : 0,
+    transform: inView ? "translateY(0)" : "translateY(60%)",
+    transition: `opacity 0.6s ease ${delay}s, transform 0.7s ${EASE} ${delay}s`,
+});
+
+// The little preview image: fades / scales in after the text has risen.
+const imgRevealSx = (inView: boolean, delay = 0) => ({
+    opacity: inView ? 1 : 0,
+    transform: inView ? "scale(1)" : "scale(0.3)",
+    transition: `opacity 0.5s ease ${delay}s, transform 0.6s ${EASE} ${delay}s`,
+});
+
+// The second word ("New") slides to the right once the image has appeared.
+const slideRightSx = (inView: boolean, delay = 0) => ({
+    display: "inline-block",
+    transform: inView ? "translateX(0)" : "translateX(-70px)",
+    transition: `transform 0.7s ${EASE} ${delay}s`,
+});
 
 type Post = {
     category?: string;
@@ -238,6 +263,7 @@ function BlogCard({ post }: { post: Post }) {
 export default function BlogSection() {
     const scrollerRef = useRef<HTMLDivElement>(null);
     const [carouselProgress, setCarouselProgress] = useState(0);
+    const { ref: headRef, inView } = useInView<HTMLDivElement>();
 
     useEffect(() => {
         const el = scrollerRef.current;
@@ -277,6 +303,7 @@ export default function BlogSection() {
                     {/* LEFT SIDE — on mobile this wraps to "What's [img]" / "New",
                         sized like the "Our [img] Services" heading. */}
                     <Box
+                        ref={headRef}
                         sx={{
                             display: "flex",
                             alignItems: "center",
@@ -292,6 +319,7 @@ export default function BlogSection() {
                                 color: "#111",
                                 lineHeight: 1,
                                 letterSpacing: { xs: "-0.03em", md: "normal" },
+                                ...riseSx(inView),
                             }}
                         >
                             What’s
@@ -307,22 +335,24 @@ export default function BlogSection() {
                                 borderRadius: { xs: "12px", md: "20px" },
                                 objectFit: "cover",
                                 flexShrink: 0,
+                                ...imgRevealSx(inView, 0.4),
                             }}
                         />
 
-                        <Typography
-                            sx={{
-                                fontSize: { xs: "3.6rem", md: "80px" },
-                                fontWeight: 700,
-                                color: "#111",
-                                lineHeight: 1,
-                                letterSpacing: { xs: "-0.03em", md: "normal" },
-                                width: { xs: "100%", md: "auto" },
-
-                            }}
-                        >
-                            New
-                        </Typography>
+                        <Box sx={{ width: { xs: "100%", md: "auto" }, ...riseSx(inView, 0.15) }}>
+                            <Typography
+                                sx={{
+                                    fontSize: { xs: "3.6rem", md: "80px" },
+                                    fontWeight: 700,
+                                    color: "#111",
+                                    lineHeight: 1,
+                                    letterSpacing: { xs: "-0.03em", md: "normal" },
+                                    ...slideRightSx(inView, 0.6),
+                                }}
+                            >
+                                New
+                            </Typography>
+                        </Box>
                     </Box>
 
                     {/* RIGHT BUTTON — desktop only */}

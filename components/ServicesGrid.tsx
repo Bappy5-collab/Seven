@@ -3,6 +3,32 @@
 import React, { useState } from "react";
 import { Box, Typography, Button } from "@mui/material";
 import NorthEastIcon from "@mui/icons-material/NorthEast";
+import { useInView } from "./useInView";
+
+const EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
+
+// Heading word that rises up from below when it scrolls into view.
+const riseSx = (inView: boolean, delay = 0) => ({
+  display: "inline-block",
+  opacity: inView ? 1 : 0,
+  transform: inView ? "translateY(0)" : "translateY(60%)",
+  transition: `opacity 0.6s ease ${delay}s, transform 0.7s ${EASE} ${delay}s`,
+});
+
+// The little preview image: fades / scales in after the text has risen.
+const imgRevealSx = (inView: boolean, delay = 0) => ({
+  opacity: inView ? 1 : 0,
+  transform: inView ? "scale(1)" : "scale(0.3)",
+  transition: `opacity 0.5s ease ${delay}s, transform 0.6s ${EASE} ${delay}s`,
+});
+
+// The second word ("Services" / "New") slides to the right once the
+// image has appeared (sits tucked left under the image until then).
+const slideRightSx = (inView: boolean, delay = 0) => ({
+  display: "inline-block",
+  transform: inView ? "translateX(0)" : "translateX(-70px)",
+  transition: `transform 0.7s ${EASE} ${delay}s`,
+});
 
 type Service = { title: string; image: string };
 
@@ -146,12 +172,15 @@ const ServiceItem = ({
 
 const ServicesSection = () => {
   const [hovered, setHovered] = useState<string | null>(null);
+  const { ref: headRef, inView } = useInView<HTMLDivElement>();
+  const { ref: mHeadRef, inView: mInView } = useInView<HTMLDivElement>();
 
   return (
     <Box sx={{ px: { xs: 3, md: 4 }, py: { xs: 8, md: 12 } }}>
       {/* Mobile heading: "Our [img] Services" */}
       <Box sx={{ display: { xs: "block", md: "none" }, mb: 4 }}>
         <Box
+          ref={mHeadRef}
           sx={{
             display: "flex",
             alignItems: "center",
@@ -167,6 +196,7 @@ const ServicesSection = () => {
               lineHeight: 1,
               letterSpacing: "-0.03em",
               color: "#111",
+              ...riseSx(mInView),
             }}
           >
             Our
@@ -178,6 +208,7 @@ const ServicesSection = () => {
               borderRadius: "12px",
               overflow: "hidden",
               flexShrink: 0,
+              ...imgRevealSx(mInView, 0.35),
             }}
           >
             <Box
@@ -187,18 +218,20 @@ const ServicesSection = () => {
               sx={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
             />
           </Box>
-          <Typography
-            sx={{
-              fontSize: "3.6rem",
-              fontWeight: 600,
-              lineHeight: 1,
-              letterSpacing: "-0.03em",
-              color: "#111",
-              width: "100%",
-            }}
-          >
-            Services
-          </Typography>
+          <Box sx={{ width: "100%", ...riseSx(mInView, 0.15) }}>
+            <Typography
+              sx={{
+                fontSize: "3.6rem",
+                fontWeight: 600,
+                lineHeight: 1,
+                letterSpacing: "-0.03em",
+                color: "#111",
+                ...slideRightSx(mInView, 0.55),
+              }}
+            >
+              Services
+            </Typography>
+          </Box>
         </Box>
       </Box>
 
@@ -212,6 +245,7 @@ const ServicesSection = () => {
         }}
       >
         <Box
+          ref={headRef}
           sx={{
             display: "flex",
             alignItems: "center",
@@ -225,6 +259,7 @@ const ServicesSection = () => {
               fontWeight: 700,
               color: "#111",
               lineHeight: 1,
+              ...riseSx(inView),
             }}
           >
             Our
@@ -239,19 +274,23 @@ const ServicesSection = () => {
               height: { xs: 50, md: 80 },
               borderRadius: "20px",
               objectFit: "cover",
+              ...imgRevealSx(inView, 0.4),
             }}
           />
 
-          <Typography
-            sx={{
-              fontSize: { xs: "40px", md: "80px" },
-              fontWeight: 700,
-              color: "#111",
-              lineHeight: 1,
-            }}
-          >
-            Services
-          </Typography>
+          <Box sx={{ ...riseSx(inView, 0.15) }}>
+            <Typography
+              sx={{
+                fontSize: { xs: "40px", md: "80px" },
+                fontWeight: 700,
+                color: "#111",
+                lineHeight: 1,
+                ...slideRightSx(inView, 0.6),
+              }}
+            >
+              Services
+            </Typography>
+          </Box>
         </Box>
 
         <Button
