@@ -14,6 +14,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import NorthEastIcon from "@mui/icons-material/NorthEast";
 import AddIcon from "@mui/icons-material/Add";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import Logo from "./Logo";
 
 type DropdownItem = { label: string; image: string };
 type DropdownConfig = {
@@ -215,61 +216,12 @@ export default function Navbar() {
         }}
       >
         {/* Logo — left */}
-        <Box sx={{ flex: 1, display: "flex", alignItems: "center" }}>
-          <Typography
-            sx={{
-              fontFamily: "Inter, sans-serif",
-              fontWeight: 700,
-              fontStyle: "normal",
-              fontSize: { xs: "1.5rem", md: "1.7rem" },
-              color: scrolled ? "#111" : "#fff",
-              transition: "color 0.3s ease",
-              cursor: "pointer",
-              letterSpacing: "-0.04em",
-              lineHeight: 1,
-              userSelect: "none",
-              display: "inline-flex",
-              alignItems: "flex-start",
-            }}
-          >
-            <span>Rise at Seve</span>
-            <Box
-              component="span"
-              sx={{
-                position: "relative",
-                display: "inline-block",
-                pr: "0.55em",
-              }}
-            >
-              N
-              <Box
-                component="span"
-                sx={{
-                  position: "absolute",
-                  top: "0.02em",
-                  left: "0.78em",
-                  width: "0.55em",
-                  height: "0.12em",
-                  bgcolor: "currentColor",
-                  transform: "rotate(-38deg)",
-                  transformOrigin: "left center",
-                  borderRadius: "0.06em",
-                }}
-              />
-            </Box>
-            <Box
-              component="span"
-              sx={{
-                fontSize: "0.32em",
-                fontWeight: 500,
-                ml: "0.15em",
-                mt: "0.15em",
-                lineHeight: 1,
-              }}
-            >
-              ®
-            </Box>
-          </Typography>
+        <Box sx={{ flex: 1, display: "flex", alignItems: "center", minWidth: 0 }}>
+          <Logo
+            width={{ xs: 132, md: 170 }}
+            color={scrolled ? "#111" : "#fff"}
+            sx={{ transition: "color 0.3s ease" }}
+          />
         </Box>
 
         {/* Desktop Nav — center */}
@@ -690,39 +642,7 @@ export default function Navbar() {
         <Box sx={{ px: 3, pt: 2, pb: 2.5 }}>
           {/* Header: logo + close */}
           <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1.5 }}>
-            <Typography
-              sx={{
-                color: "#fff",
-                fontFamily: "Inter, sans-serif",
-                fontWeight: 700,
-                fontStyle: "normal",
-                fontSize: "1.4rem",
-                letterSpacing: "-0.04em",
-                lineHeight: 1,
-                display: "inline-flex",
-                alignItems: "flex-start",
-              }}
-            >
-              <span>Rise at Seve</span>
-              <Box component="span" sx={{ position: "relative", display: "inline-block", pr: "0.55em" }}>
-                N
-                <Box
-                  component="span"
-                  sx={{
-                    position: "absolute",
-                    top: "0.02em",
-                    left: "0.78em",
-                    width: "0.55em",
-                    height: "0.12em",
-                    bgcolor: "currentColor",
-                    transform: "rotate(-38deg)",
-                    transformOrigin: "left center",
-                    borderRadius: "0.06em",
-                  }}
-                />
-              </Box>
-              <Box component="span" sx={{ fontSize: "0.32em", fontWeight: 500, ml: "0.15em", mt: "0.15em", lineHeight: 1 }}>®</Box>
-            </Typography>
+            <Logo width={132} color="#fff" onClick={() => setDrawerOpen(false)} />
             <IconButton
               onClick={() => setDrawerOpen(false)}
               sx={{

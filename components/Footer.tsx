@@ -7,6 +7,7 @@ import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import NorthEastIcon from "@mui/icons-material/NorthEast";
+import Logo from "./Logo";
 
 function TikTokIcon({ size = 20 }: { size?: number }) {
   return (
@@ -282,32 +283,7 @@ export default function Footer() {
 
         {/* big wordmark */}
         <Box sx={{ position: "relative", mb: { xs: 5, md: 7 } }}>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "flex-start",
-              fontWeight: 500,
-              letterSpacing: "-0.04em",
-              lineHeight: 0.85,
-              color: "#fff",
-              fontSize: { xs: "16vw", md: "15.5vw" },
-              whiteSpace: "nowrap",
-            }}
-          >
-            <span>Rise at Seven</span>
-            <Box
-              component="span"
-              sx={{
-                fontSize: "0.18em",
-                ml: "0.05em",
-                mt: "0.4em",
-                fontWeight: 400,
-                lineHeight: 1,
-              }}
-            >
-              ®
-            </Box>
-          </Box>
+          <Logo width="100%" color="#fff" sx={{ display: "block" }} />
         </Box>
 
         {/* bottom bar */}
